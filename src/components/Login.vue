@@ -55,7 +55,7 @@
       </p>
       <p>
         Chưa có tài khoản?
-        <a href="/register" class="text-secondary text-decoration-underline"
+        <a href="/register/otp" class="text-secondary text-decoration-underline"
           >Đăng ký ngay</a
         >
       </p>
