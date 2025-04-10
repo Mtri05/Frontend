@@ -13,8 +13,8 @@
         <div class="d-flex align-items-center">
           <a href="/contact" class="text-dark text-decoration-none me-3">Tìm cửa hàng</a>
           <a href="/about" class="text-dark text-decoration-none me-3">Giới thiệu</a>
-            <a href="/logout" class="text-dark text-decoration-none me-3">Đăng xuất</a>
-            <a href="/login" class="text-dark text-decoration-none me-3">Đăng nhập</a>
+          <a href="/logout" class="text-dark text-decoration-none me-3">Đăng xuất</a>
+          <a href="/login" class="text-dark text-decoration-none me-3">Đăng nhập</a>
         </div>
       </div>
     </div>
@@ -43,13 +43,18 @@
             </li>
             <!-- Menu Dropdown -->
             <li class="nav-item dropdown position-static">
-              <a class="nav-link no-arrow" href="/product" id="navbarDropdown">Danh Mục</a>
+              <a class="nav-link no-arrow" href="/product" id="navbarDropdown"
+                >Danh Mục</a
+              >
             </li>
 
             <!-- Mục Nam -->
             <li class="nav-item dropdown position-static">
               <a class="nav-link no-arrow" href="#" id="navbarDropdownMen">Nam</a>
-              <div class="dropdown-menu custom-dropdown w-100" aria-labelledby="navbarDropdownMen">
+              <div
+                class="dropdown-menu custom-dropdown w-100"
+                aria-labelledby="navbarDropdownMen"
+              >
                 <div class="container">
                   <div class="row">
                     <div class="col-md-2">
@@ -288,28 +293,44 @@
               <i class="fa-solid fa-shopping-cart fs-5"></i>
             </a>
 
-            <!-- Icon User -->
+            <!-- User Icon Dropdown -->
             <div class="dropdown d-inline">
               <a
                 href="#"
                 class="text-dark text-decoration-none mx-2"
                 id="userDropdown"
                 data-bs-toggle="dropdown"
+                aria-expanded="false"
               >
-                <i class="fa-solid fa-gear fs-5"></i>
+                <i class="fa-solid fa-user-circle fs-4"></i>
               </a>
               <ul
-                class="dropdown-menu dropdown-menu-start"
+                class="dropdown-menu dropdown-menu-start shadow-sm border-0 rounded-3 mt-3"
                 aria-labelledby="userDropdown"
+                style="min-width: 220px"
               >
                 <li>
-                  <a class="dropdown-item" href="/user/profile">Cập nhật thông tin</a>
+                  <a class="dropdown-item py-2" href="/user/profile">
+                    <i class="fa-solid fa-user-pen me-2 text-primary"></i> Cập nhật thông
+                    tin
+                  </a>
                 </li>
                 <li>
-                  <a class="dropdown-item" href="/user/change-password">Đổi mật khẩu</a>
+                  <a class="dropdown-item py-2" href="/user/change-password">
+                    <i class="fa-solid fa-key me-2 text-warning"></i> Đổi mật khẩu
+                  </a>
                 </li>
-                <li><a class="dropdown-item" href="/user/address">Địa chỉ của tôi</a></li>
-                <li><a class="dropdown-item" href="/user/order/history">Đơn hàng</a></li>
+                <li>
+                  <a class="dropdown-item py-2" href="/user/address">
+                    <i class="fa-solid fa-location-dot me-2 text-success"></i> Địa chỉ của
+                    tôi
+                  </a>
+                </li>
+                <li>
+                  <a class="dropdown-item py-2" href="/user/order/history">
+                    <i class="fa-solid fa-box-archive me-2 text-danger"></i> Đơn hàng
+                  </a>
+                </li>
               </ul>
             </div>
 
