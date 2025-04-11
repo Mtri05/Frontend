@@ -3,7 +3,7 @@
 <template>
   <div class="container p-3">
     <div class="form-container shadow p-3 rounded bg-light">
-      <h5 class="text-center mb-3">Thêm Sản Phẩm Mới</h5>
+      <h3 class="text-center mb-3">Thêm Sản Phẩm Mới</h3>
       <form action="/admin/product/add" method="post" enctype="multipart/form-data">
         <!-- Product Name -->
         <div class="mb-2">
@@ -57,7 +57,7 @@
         <!-- Product Category -->
         <div class="mb-2">
           <label for="category" class="form-label fw-semibold">Danh mục</label>
-          <select class="form-select form-select-lg" name="category" id="category">
+          <select class="form-select" name="category" id="category">
             <option selected value="-1">---------Chọn danh mục---------</option>
             <!-- Danh sách danh mục sẽ được thêm bằng JavaScript hoặc server-side -->
           </select>
@@ -81,7 +81,7 @@
 
         <!-- Submit and Cancel Buttons -->
         <div class="mb-2">
-          <button type="submit" class="btn btn-primary">Thêm sản phẩm</button>
+          <button type="submit" class="btn btn-primary me-2">Thêm sản phẩm</button>
           <a href="/admin/product" class="btn btn-secondary">Hủy</a>
         </div>
       </form>
