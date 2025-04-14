@@ -1,14 +1,45 @@
 <script setup>
-import { onMounted, nextTick } from 'vue'
+import { ref, onMounted, nextTick } from 'vue'
+import axios from 'axios'
 
-onMounted(async () => {
-  await nextTick()
-  $('#productTable').DataTable({
+const products = ref([])
+let dataTable = null
+
+// Hàm khởi tạo DataTable
+const initDataTable = () => {
+  const table = $('#productTable')
+  if ($.fn.dataTable.isDataTable('#productTable')) {
+    table.DataTable().destroy()
+  }
+
+  table.DataTable({
     responsive: true,
     language: {
       url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/vi.json',
     },
   })
+}
+
+// Hàm load dữ liệu và render bảng
+const loadProducts = async () => {
+  try {
+    const response = await axios.get('http://localhost:8080/api/product/products')
+    products.value = response.data
+
+    await nextTick() // đảm bảo Vue render xong DOM
+    initDataTable()
+  } catch (error) {
+    console.error('Lỗi khi tải sản phẩm:', error)
+    const errorMessage = document.getElementById('error-message')
+    if (errorMessage) {
+      errorMessage.style.display = 'block'
+      errorMessage.textContent = 'Không thể tải dữ liệu sản phẩm!'
+    }
+  }
+}
+
+onMounted(() => {
+  loadProducts()
 })
 </script>
 
@@ -18,13 +49,12 @@ onMounted(async () => {
     <hr />
     <div class="alert alert-danger" style="display: none" id="error-message"></div>
     <div class="d-flex justify-content-between align-items-center mb-3">
-      <!-- Nút thêm mới -->
       <a href="/admin/product/form">
         <button type="button" class="btn btn-primary">Thêm mới</button>
       </a>
     </div>
+
     <div class="table-responsive">
-      <!-- Bảng sản phẩm -->
       <table id="productTable" class="table table-striped table-bordered">
         <thead class="table-dark">
           <tr>
@@ -39,37 +69,44 @@ onMounted(async () => {
           </tr>
         </thead>
         <tbody>
-          <!-- <th:block th:each="item : ${products}">
-						<tr>
-							<td th:text="${item.id}"></td>
-							<td><img alt=""
-								th:src="${'/images/'+item.images.get(0).name}"
-								style="width: 50px; height: 50px;"></td>
-							<td th:text="${item.name}"></td>
-							<td th:text="${item.desc}"></td>
-							<td th:text="${#numbers.formatDecimal(item.price, 0, 'COMMA', 0, 'POINT')} + ' VND'"></td>
-							<td><span
-								th:class="${item.status ? 'badge bg-success' : 'badge bg-danger'}"
-								th:text="${item.status ? 'Active' : 'Inactive'}"></span></td>
-							<td th:text="${item.category.name}"></td>
+          <tr v-for="item in products" :key="item.id">
+            <td>{{ item.id }}</td>
+            <td>
+              <img
+                v-if="item.imageNames && item.imageNames.length > 0"
+                :src="`http://localhost:8080/images/${item.imageNames[0]}`"
+                alt="image"
+                style="width: 50px; height: 50px"
+              />
+            </td>
 
-							<td class=""><a style="text-decoration: none;"
-								th:href="${'/admin/product/form?productId='+item.id}">
-									<button class="btn btn-warning btn-sm ">Sửa</button>
-							</a> <a style="text-decoration: none;"
-								th:href="${'/admin/product/image?productId='+ item.id}">
-									<button class="btn btn-secondary btn-sm">Xem ảnh</button>
-							</a> <a style="text-decoration: none;"
-								th:href="${'/admin/product/size?productId='+item.id}">
-									<button class="btn btn-primary btn-sm">Số Lượng</button>
-							</a></td>
-						</tr>
-					</th:block> -->
+            <td>{{ item.name }}</td>
+            <td>{{ item.description }}</td>
+            <td>{{ new Intl.NumberFormat('vi-VN').format(item.price) }} VND</td>
+            <td>
+              <span :class="item.status ? 'badge bg-success' : 'badge bg-danger'">
+                {{ item.status ? 'Active' : 'Inactive' }}
+              </span>
+            </td>
+            <td>{{ item.category?.name }}</td>
+            <td>
+              <a :href="`/admin/product/form?productId=${item.id}`">
+                <button class="btn btn-warning btn-sm">Sửa</button>
+              </a>
+              <a :href="`/admin/product/image?productId=${item.id}`">
+                <button class="btn btn-secondary btn-sm">Xem ảnh</button>
+              </a>
+              <a :href="`/admin/product/size?productId=${item.id}`">
+                <button class="btn btn-primary btn-sm">Số Lượng</button>
+              </a>
+            </td>
+          </tr>
         </tbody>
       </table>
     </div>
   </div>
 </template>
+
 <style scoped>
 @media (max-width: 768px) {
   #productTable td img {

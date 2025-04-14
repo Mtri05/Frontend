@@ -1,6 +1,7 @@
-<script></script>
+<script setup></script>
+
 <template>
-  <header th:fragment="header">
+  <header>
     <!-- Logo Bar -->
     <div class="bg-light">
       <div class="container d-flex justify-content-between align-items-center py-2">
@@ -43,18 +44,13 @@
             </li>
             <!-- Menu Dropdown -->
             <li class="nav-item dropdown position-static">
-              <a class="nav-link no-arrow" href="/product" id="navbarDropdown"
-                >Danh Mục</a
-              >
+              <a class="nav-link no-arrow" href="/product" id="navbarDropdown">Danh Mục</a>
             </li>
 
             <!-- Mục Nam -->
             <li class="nav-item dropdown position-static">
               <a class="nav-link no-arrow" href="#" id="navbarDropdownMen">Nam</a>
-              <div
-                class="dropdown-menu custom-dropdown w-100"
-                aria-labelledby="navbarDropdownMen"
-              >
+              <div class="dropdown-menu custom-dropdown w-100" aria-labelledby="navbarDropdownMen">
                 <div class="container">
                   <div class="row">
                     <div class="col-md-2">
@@ -168,10 +164,7 @@
             </li>
             <li class="nav-item dropdown position-static">
               <a class="nav-link no-arrow" href="#" id="navbarDropdownKids">Trẻ Em</a>
-              <div
-                class="dropdown-menu custom-dropdown w-100"
-                aria-labelledby="navbarDropdownKids"
-              >
+              <div class="dropdown-menu custom-dropdown w-100" aria-labelledby="navbarDropdownKids">
                 <div class="container">
                   <div class="row">
                     <!-- Cột 1: Nổi Bật -->
@@ -208,9 +201,7 @@
                       <h6 class="dropdown-header">Trẻ Em Theo Độ Tuổi</h6>
                       <a class="dropdown-item" href="#">Trẻ Lớn (7 - 14 tuổi)</a>
                       <a class="dropdown-item" href="#">Trẻ Nhỏ (4 - 7 tuổi)</a>
-                      <a class="dropdown-item" href="#"
-                        >Trẻ Sơ Sinh & Tập Đi (0 - 4 tuổi)</a
-                      >
+                      <a class="dropdown-item" href="#">Trẻ Sơ Sinh & Tập Đi (0 - 4 tuổi)</a>
                     </div>
                     <!-- Cột 5: Mua Sắm Theo Môn Thể Thao -->
                     <div class="col-md-2">
@@ -234,10 +225,7 @@
             </li>
             <li class="nav-item dropdown position-static">
               <a class="nav-link no-arrow" href="#" id="navbarDropdownSale">Khuyến Mãi</a>
-              <div
-                class="dropdown-menu custom-dropdown w-100"
-                aria-labelledby="navbarDropdownSale"
-              >
+              <div class="dropdown-menu custom-dropdown w-100" aria-labelledby="navbarDropdownSale">
                 <div class="container">
                   <div class="row">
                     <!-- Cột 1: Giảm Giá & Ưu Đãi -->
@@ -294,13 +282,12 @@
             </a>
 
             <!-- User Icon Dropdown -->
-            <div class="dropdown d-inline">
+            <div class="dropdown d-inline" aria-labelledby="userDropdown">
               <a
                 href="#"
                 class="text-dark text-decoration-none mx-2"
                 id="userDropdown"
                 data-bs-toggle="dropdown"
-                aria-expanded="false"
               >
                 <i class="fa-solid fa-user-circle fs-4"></i>
               </a>
@@ -310,24 +297,31 @@
                 style="min-width: 220px"
               >
                 <li>
-                  <a class="dropdown-item py-2" href="/user/profile">
-                    <i class="fa-solid fa-user-pen me-2 text-primary"></i> Cập nhật thông
-                    tin
+                  <a class="dropdown-item py-2" data-bs-toggle="dropdown" href="/user/profile">
+                    <i class="fa-solid fa-user-pen me-2 text-primary"></i> Cập nhật thông tin
                   </a>
                 </li>
                 <li>
-                  <a class="dropdown-item py-2" href="/user/change-password">
+                  <a
+                    class="dropdown-item py-2"
+                    data-bs-toggle="dropdown"
+                    href="/user/change-password"
+                  >
                     <i class="fa-solid fa-key me-2 text-warning"></i> Đổi mật khẩu
                   </a>
                 </li>
                 <li>
-                  <a class="dropdown-item py-2" href="/user/address">
-                    <i class="fa-solid fa-location-dot me-2 text-success"></i> Địa chỉ của
-                    tôi
+                  <a class="dropdown-item py-2" data-bs-toggle="dropdown" href="/user/address">
+                    <i class="fa-solid fa-location-dot me-2 text-success"></i> Địa chỉ của tôi
                   </a>
                 </li>
                 <li>
-                  <a class="dropdown-item py-2" href="/user/order/history">
+                  <a
+                    class="dropdown-item py-2"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                    href="/user/order/history"
+                  >
                     <i class="fa-solid fa-box-archive me-2 text-danger"></i> Đơn hàng
                   </a>
                 </li>

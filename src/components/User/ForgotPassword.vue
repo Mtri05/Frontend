@@ -1,4 +1,44 @@
-<script></script>
+<script setup>
+import { ref } from 'vue'
+import axios from 'axios'
+import { useRouter } from 'vue-router'
+
+const email = ref('')
+const successMessage = ref('')
+const errorMessage = ref('')
+const isSubmitting = ref(false)
+const router = useRouter()
+
+const handleForgotPassword = async (e) => {
+  e.preventDefault()
+
+  successMessage.value = ''
+  errorMessage.value = ''
+  isSubmitting.value = true
+
+  try {
+    const response = await axios.post('http://localhost:8080/api/forgot-password', null, {
+      params: { email: email.value },
+    })
+
+    if (response.data.status === 'success') {
+      successMessage.value = response.data.message
+
+      // Chờ một chút để người dùng thấy thông báo
+      setTimeout(() => {
+        router.push(`/verify-otp?email=${encodeURIComponent(email.value)}`)
+      }, 1000)
+    } else {
+      errorMessage.value = response.data.message
+    }
+  } catch (err) {
+    errorMessage.value = 'Đã xảy ra lỗi trong quá trình gửi yêu cầu.'
+    console.error(err)
+  } finally {
+    isSubmitting.value = false
+  }
+}
+</script>
 
 <template>
   <div class="forgotpassword-container">
@@ -16,36 +56,31 @@
 
       <h2 class="text-center mb-4">Quên Mật Khẩu</h2>
 
-      <!-- Hiển thị thông báo lỗi nếu có -->
-      <div class="alert alert-danger text-center" id="error-message" style="display: none">
-        <span id="error-text"></span>
-      </div>
+      <!-- Thông báo -->
+      <div v-if="errorMessage" class="alert alert-danger text-center">{{ errorMessage }}</div>
+      <div v-if="successMessage" class="alert alert-success text-center">{{ successMessage }}</div>
 
-      <!-- Hiển thị thông báo thành công nếu có -->
-      <div class="alert alert-success text-center" id="success-message" style="display: none">
-        <span id="success-text"></span>
-      </div>
-
-      <form action="/forgot-password" method="POST">
-        <!-- Email -->
+      <form @submit="handleForgotPassword">
         <div class="mb-3">
           <label for="email" class="form-label">Email</label>
           <input
-            type="text"
+            type="email"
             class="form-control"
             id="email"
-            name="email"
+            v-model="email"
             placeholder="Nhập email của bạn"
+            required
           />
         </div>
 
-        <!-- Nút gửi -->
         <div class="d-grid">
-          <button type="submit" class="btn btn-dark">Gửi Yêu Cầu</button>
+          <button type="submit" class="btn btn-dark" :disabled="isSubmitting">
+            {{ isSubmitting ? 'Đang gửi...' : 'Gửi Yêu Cầu' }}
+          </button>
         </div>
       </form>
 
-      <!-- Liên kết khác -->
+      <!-- Liên kết -->
       <div class="mt-3 text-center">
         <p class="mb-1">
           <a href="/login" class="text-secondary text-decoration-underline">Quay lại Đăng Nhập</a>

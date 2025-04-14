@@ -15,6 +15,8 @@ import ProductFormView from '@/views/ProductFormView.vue'
 import ManageDashboardView from '@/views/ManageDashboardView.vue'
 import OrderHistoryView from '@/views/OrderHistoryView.vue'
 import FavoriteView from '@/views/FavoriteView.vue'
+import VerifyOtpView from '@/views/VerifyOtpView.vue'
+import ResetPasswordView from '@/views/ResetPasswordView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -68,6 +70,15 @@ const router = createRouter({
       path: '/user/favorite',
       name: 'favorite',
       component: FavoriteView,
+    },{
+      path: '/verify-otp',
+      name: 'verify-otp',
+      component: VerifyOtpView,
+    },
+    {
+      path: '/reset-password',
+      name: 'reset-password',
+      component: ResetPasswordView,
     },
     {
       path: '/admin/category',
