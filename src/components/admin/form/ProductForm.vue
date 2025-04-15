@@ -2,7 +2,7 @@
 import { ref, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import { useRouter } from "vue-router";
-import axios from "axios";
+import axios from "axios"
 
 const route = useRoute();
 const router = useRouter();
