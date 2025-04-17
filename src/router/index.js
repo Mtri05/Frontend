@@ -18,7 +18,8 @@ import OrderHistoryView from '@/views/OrderHistoryView.vue'
 import FavoriteView from '@/views/FavoriteView.vue'
 import VerifyOtpView from '@/views/VerifyOtpView.vue'
 import ResetPasswordView from '@/views/ResetPasswordView.vue'
-import ManageImage from  '@/views/ManageImageView.vue'
+import ManageImage from '@/views/ManageImageView.vue'
+import Cart from '@/components/User/Cart.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -123,6 +124,10 @@ const router = createRouter({
       name: 'manageImage',
       component: ManageImage,
     },
+    { path: '/cart',
+      name: 'cart',
+      component: Cart }
+      ,
     {
       path: '/about',
       name: 'about',
@@ -130,7 +135,8 @@ const router = createRouter({
       // this generates a separate chunk (About.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
       component: () => import('../views/AboutView.vue'),
-    },
+    }
+
   ],
 })
 

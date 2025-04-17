@@ -1,5 +1,45 @@
 <script setup>
-import "@/assets/main.js";
+import { ref, onMounted } from 'vue'
+import axios from 'axios'
+import { useRouter } from 'vue-router'
+import { addToCart } from '@/assets/api/cartAPI'
+const products = ref([])
+const selectedProductSizeIds = ref({})
+const quantities = ref({})
+const router = useRouter()
+
+onMounted(async () => {
+  try {
+    const response = await axios.get('http://localhost:8080/api/product/products')
+    products.value = response.data
+  } catch (error) {
+    console.error('Lỗi khi load sản phẩm:', error)
+  }
+})
+
+const addToCartHandler = async (productId) => {
+  const selectedSizeId = selectedProductSizeIds.value[productId]
+  const qty = quantities.value[productId] || 1
+  console.log('>>> Sending to cart:', {
+  productSizeId: selectedSizeId,
+  quantity: qty
+})
+
+
+
+  if (!selectedSizeId) {
+    alert('Vui lòng chọn kích cỡ!')
+    return
+  }
+
+  try {
+    await addToCart(selectedSizeId, qty)
+    alert('Đã thêm vào giỏ hàng')
+    router.push('/cart')
+  } catch (err) {
+    alert(err.message || 'Lỗi khi thêm vào giỏ')
+  }
+}
 </script>
 <template>
   <div class="container my-1">
@@ -70,14 +110,6 @@ import "@/assets/main.js";
               <button class="view-more">see more</button>
             </div>
           </div>
-          <!-- <div class="item"
-                        style="background-image: url(https://taothuonghieu.com/wp-content/uploads/2023/10/3-khac-biet-chien-luoc-thuong-hieu-Nike.webp.webp);">
-                        <div class="content">
-                            <div class="name">Ireland</div>
-                            <div class="des">Lorem ipsum dolor, sit amet!</div>
-                            <button>see more</button>
-                        </div>
-                    </div> -->
         </div>
         <div class="button">
           <button class="prev"><i class="bi bi-arrow-left"></i></button>
@@ -101,28 +133,38 @@ import "@/assets/main.js";
               </button>
             </div>
           </div>
-          <!-- <div class="products-container" id="productsContainer">
-          <div class="col-md-3 col-sm-6 mb-4">
-            <div class="product-card text-center">
-              <i
-                class="favorite-icon bi bi-heart"
-                data-product-id="${product.id}"
-                onclick="toggleFavorite(this)"
-              >
-              </i>
+          <div class="col-md-3" v-for="product in products" :key="product.id">
+            <div class="card text-center p-2 h-100">
               <img
-                src="/images/${product.images[0].name}"
-                alt="${product.name}"
-                class="img-fluid"
+                :src="'/images/' + product.imageNames[0]"
+                :alt="product.name"
+                class="img-fluid mb-2"
               />
-              <h5>${product.name}</h5>
-              <p class="text-danger">${product.price} VND</p>
-              <a href="/product/detail?productId=${product.id}" class="btn btn-primary">
-                Chi Tiết
-              </a>
+              <h5>{{ product.name }}</h5>
+              <p class="text-danger">{{ product.price.toLocaleString() }} VND</p>
+
+              <select v-model="selectedProductSizeIds[product.id]" class="form-select mb-2">
+                <option
+                  v-for="productSize in product.productSizes"
+                  :key="productSize.id"
+                  :value="productSize.id"
+                >
+                  {{ productSize.size.name }} (Còn: {{ productSize.stock }})
+                </option>
+              </select>
+
+              <input
+                type="number"
+                v-model="quantities[product.id]"
+                min="1"
+                class="form-control mb-2"
+              />
+
+              <button class="btn btn-sm btn-outline-primary" @click="addToCartHandler(product.id)">
+                Thêm vào giỏ
+              </button>
             </div>
           </div>
-        </div> -->
         </div>
       </div>
       <div class="section" data-aos="fade-up">
@@ -138,33 +180,19 @@ import "@/assets/main.js";
               </button>
             </div>
           </div>
-          <div
-            class="d-flex align-items-center justify-content-between position-relative"
-          >
+          <div class="d-flex align-items-center justify-content-between position-relative">
             <!-- Danh sách các môn thể thao -->
             <div class="products-container" id="sportsContainer">
               <div class="product-card">
-                <img
-                  src="@/assets/images/Running.jpg"
-                  class="card-img-top"
-                  alt="Running"
-                />
+                <img src="@/assets/images/Running.jpg" class="card-img-top" alt="Running" />
                 <button class="sport-btn">Running</button>
               </div>
               <div class="product-card">
-                <img
-                  src="@/assets/images/Football.jpg"
-                  class="card-img-top"
-                  alt="Football"
-                />
+                <img src="@/assets/images/Football.jpg" class="card-img-top" alt="Football" />
                 <button class="sport-btn">Football</button>
               </div>
               <div class="product-card">
-                <img
-                  src="@/assets/images/Basketball.jpg"
-                  class="card-img-top"
-                  alt="Basketball"
-                />
+                <img src="@/assets/images/Basketball.jpg" class="card-img-top" alt="Basketball" />
                 <button class="sport-btn">Basketball</button>
               </div>
               <div class="product-card">

@@ -18,6 +18,8 @@ import '@fortawesome/fontawesome-free/css/all.css'
 
 import 'bootstrap-icons/font/bootstrap-icons.css';
 
+import '@/assets/css/cart.css'
+
 
 
 const app = createApp(App)
