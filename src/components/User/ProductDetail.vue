@@ -1,6 +1,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import axios from 'axios'
+import Review from './Review.vue'
 
 const product = ref(null)
 const selectedSize = ref(null)
@@ -30,21 +31,26 @@ const changeQuantity = (delta) => {
   }
 }
 
+const userId = ref(null)
+
 onMounted(async () => {
+  const token = getCookie('userId')
+  if (token) userId.value = parseInt(token)
+
   const productId = getProductIdFromUrl()
   if (productId) {
     try {
       const res = await axios.get(`http://localhost:8080/api/productne/${productId}`)
       product.value = res.data
-      if (product.value.sizes && product.value.sizes.length > 0) {
+      if (product.value.sizes?.length) {
         selectedSize.value = product.value.sizes[0]
       }
-      console.log('Product loaded:', product.value) // Log the entire product data to check
     } catch (err) {
       console.error('Error fetching product:', err)
     }
   }
 })
+
 
 const addToCart = async () => {
   const userId = getCookie('userId')
@@ -134,5 +140,8 @@ function getCookie(name) {
         </div>
       </div>
     </div>
+    <Review :productId="product.id" :userId="parseInt(getCookie('userId'))" />
   </div>
+
+
 </template>
