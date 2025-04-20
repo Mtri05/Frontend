@@ -2,6 +2,7 @@
 import { Chart } from 'chart.js/auto'
 import axios from 'axios'
 
+const token = localStorage.getItem('token');
 export default {
   data() {
     return {
@@ -16,9 +17,24 @@ export default {
     async loadStats() {
       try {
         const [orderRes, userRes, productRes, categoryRes] = await Promise.all([
-          axios.get('http://localhost:8080/api/admin/order'),
-          axios.get('http://localhost:8080/api/admin/users'),
-          axios.get('http://localhost:8080/api/admin/product/products'),
+          axios.get('http://localhost:8080/api/admin/order',{
+            headers: {
+              Authorization: `Bearer ${token}`,
+              
+            },
+          }),
+          axios.get('http://localhost:8080/api/admin/users',{
+            headers: {
+            Authorization: `Bearer ${token}`,
+            
+          },
+          }),
+          axios.get('http://localhost:8080/api/admin/product/products',{
+            headers: {
+              Authorization: `Bearer ${token}`,
+              
+            },
+          }),
           axios.get('http://localhost:8080/api/category/list'),
         ])
 

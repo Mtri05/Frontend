@@ -14,9 +14,16 @@ let modalInstance = null
 const route = useRoute()
 const productId = Number(route.query.productId)
 
+const token = localStorage.getItem('token');
+
 const loadSizes = async () => {
   try {
-    const res = await axios.get(`http://localhost:8080/api/product/sizes?productId=${productId}`)
+    const res = await axios.get(`http://localhost:8080/api/admin/product/sizes?productId=${productId}`,{
+      headers: {
+    Authorization: `Bearer ${token}`,
+    
+  },
+    })
     sizes.value = res.data
   } catch (err) {
     console.error('Lỗi tải size:', err)
@@ -25,7 +32,12 @@ const loadSizes = async () => {
 
 const loadProductName = async () => {
   try {
-    const res = await axios.get(`http://localhost:8080/api/product/${productId}`)
+    const res = await axios.get(`http://localhost:8080/api/admin/product/${productId}`,{
+      headers: {
+        Authorization: `Bearer ${token}`,
+    
+      },
+    })
     productName.value = res.data.name
   } catch (err) {
     console.error('Không thể tải tên sản phẩm:', err)
@@ -35,7 +47,14 @@ const deleteProductSize = async (id) => {
   if (!confirm('Bạn có chắc chắn muốn xóa size này không?')) return
 
   try {
-    await axios.post(`http://localhost:8080/api/product/productSize/delete?id=${id}`)
+    await axios.post(`http://localhost:8080/api/admin/product/productSize/delete?id=${id}`,{},{
+      
+      headers: {
+        Authorization: `Bearer ${token}`,
+    
+      },
+    }
+    )
     sizes.value = sizes.value.filter((item) => item.id !== id)
     alert('xóa thành công')
   } catch (err) {
@@ -62,9 +81,16 @@ const openEditModal = async (item) => {
 
 const confirmEdit = async () => {
   try {
-    await axios.post('http://localhost:8080/api/product/productSize/update', {
+    await axios.post('http://localhost:8080/api/admin/product/productSize/update',{
+      
       id: editingId.value,
       stock: editStock.value,
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        
+      },
     })
     await loadSizes()
     modalInstance.hide()

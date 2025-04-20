@@ -4,6 +4,8 @@ import axios from 'axios'
 
 const users = ref([])
 
+const token = localStorage.getItem('token');
+
 const initDataTable = () => {
   const table = $('#userTable')
   if ($.fn.dataTable.isDataTable('#userTable')) {
@@ -20,7 +22,12 @@ const initDataTable = () => {
 
 const loadUsers = async () => {
   try {
-    const response = await axios.get('http://localhost:8080/api/admin/users')
+    const response = await axios.get('http://localhost:8080/api/admin/users',{
+      headers: {
+        Authorization: `Bearer ${token}`,
+        
+      },
+    })
     console.log(response.data)
     users.value = response.data
 
@@ -48,6 +55,7 @@ const updateStatus = async (userId, newStatus) => {
       {
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
         },
       },
     )

@@ -7,12 +7,18 @@ const route = useRoute()
 const productId = Number(route.query.productId)
 
 const imageList = ref([])
+const token = localStorage.getItem('token');
 
 // Load ảnh sản phẩm từ API
 const loadImagesByProduct = async () => {
   try {
     if (!productId) return
-    const res = await axios.get(`http://localhost:8080/api/product/images?productId=${productId}`)
+    const res = await axios.get(`http://localhost:8080/api/admin/product/images?productId=${productId}`,{
+      headers: {
+    Authorization: `Bearer ${token}`,
+    
+  },
+    })
     imageList.value = res.data
   } catch (err) {
     console.error('Lỗi khi load ảnh:', err)
@@ -25,10 +31,12 @@ const deleteImage = async (id) => {
     formData.append('id', id) // Append ảnh cần xóa vào FormData
 
     // Gửi yêu cầu DELETE
-    const res = await axios.post(`http://localhost:8080/api/product/image/delete`, formData, {
+    const res = await axios.post(`http://localhost:8080/api/admin/product/image/delete`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
+        Authorization: `Bearer ${token}`,
       },
+      
     })
 
     // Cập nhật danh sách ảnh sau khi xóa

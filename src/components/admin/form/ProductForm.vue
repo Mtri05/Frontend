@@ -1,12 +1,21 @@
 <script setup>
+<<<<<<< HEAD
+import { ref, onMounted } from "vue";
+import { useRoute } from "vue-router";
+import { useRouter } from "vue-router";
+import axios from "axios"
+=======
 import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useRouter } from 'vue-router'
 import axios from 'axios'
+>>>>>>> f5f87a2ed645585f6b1b82863b80439b36e6440d
 
 const route = useRoute()
 const router = useRouter()
 const productId = Number(route.query.productId)
+
+const token = localStorage.getItem('token');
 
 const form = ref({
   name: '',
@@ -17,12 +26,18 @@ const form = ref({
   images: [],
 })
 
+
 const categories = ref([])
 const errors = ref({})
 
 // Load all categories
 const loadCategories = async () => {
-  const res = await axios.get('http://localhost:8080/api/admin/product/categories')
+  const res = await axios.get('http://localhost:8080/api/admin/product/categories',{
+    headers: {
+    Authorization: `Bearer ${token}`,
+    
+  },
+  })
   categories.value = res.data
 }
 
@@ -30,7 +45,12 @@ const loadCategories = async () => {
 const loadProduct = async () => {
   if (!productId) return
   try {
-    const res = await axios.get(`http://localhost:8080/api/admin/product/${productId}`)
+    const res = await axios.get(`http://localhost:8080/api/admin/product/${productId}`,{
+      headers: {
+    Authorization: `Bearer ${token}`,
+    
+  },
+    })
     const product = res.data
     console.log(product)
 
@@ -66,13 +86,19 @@ const handleSubmit = async () => {
   try {
     if (productId) {
       await axios.post(`http://localhost:8080/api/admin/product/update/${productId}`, formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
+        headers: { 
+          'Content-Type': 'multipart/form-data' ,
+          Authorization: `Bearer ${token}`,
+        },
       })
       alert('Cập nhật thành công')
       router.push('/admin/product')
     } else {
       await axios.post('http://localhost:8080/api/admin/product/add', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
+        headers: { 'Content-Type': 'multipart/form-data',
+        Authorization: `Bearer ${token}`,
+         },
+        
       })
       alert('Thêm thành công')
       router.push('/admin/product')

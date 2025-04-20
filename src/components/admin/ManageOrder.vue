@@ -4,9 +4,17 @@ import axios from 'axios'
 
 const orders = ref([])
 
+
+const token = localStorage.getItem('token');
+
 onMounted(async () => {
   try {
-    const response = await axios.get('http://localhost:8080/api/admin/order')
+    const response = await axios.get('http://localhost:8080/api/admin/order',{
+      headers: {
+    Authorization: `Bearer ${token}`,
+    
+  },
+    })
     orders.value = response.data
   } catch (err) {
     console.error(err)
@@ -16,9 +24,17 @@ onMounted(async () => {
 
 const updateStatus = async (item) => {
   try {
-    await axios.post(`http://localhost:8080/api/admin/order/update-status/${item.orderId}`, {
+    await axios.post(`http://localhost:8080/api/admin/order/update-status/${item.orderId}`,
+    {
       status: item.status,
+    }, 
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+    
+      },
     })
+    
     alert('Cập nhật trạng thái thành công!')
   } catch (err) {
     console.error(err)
