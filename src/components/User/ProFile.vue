@@ -13,10 +13,16 @@ const email = ref('')
 const avatar = ref(null)
 const previewUrl = ref('')
 
+const token = localStorage.getItem('token');
+
 // Lấy thông tin người dùng khi trang được tải
 onMounted(async () => {
   try {
-    const response = await axios.get(`http://localhost:8080/api/profile/${id}`)
+    const response = await axios.get(`http://localhost:8080/api/user/profile/${id}`,{
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
     const userProfile = response.data
 
     if (userProfile) {
@@ -55,9 +61,10 @@ const updateProfile = async () => {
   }
 
   try {
-    const response = await axios.post('http://localhost:8080/api/profile/update', formData, {
+    const response = await axios.post('http://localhost:8080/api/user/profile/update', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
+        Authorization: `Bearer ${token}`,
       },
     })
     alert(response.data) // Hiển thị thông báo sau khi cập nhật thành công

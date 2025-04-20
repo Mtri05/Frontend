@@ -24,12 +24,18 @@ const getCookie = (name) => {
   const parts = value.split(`; ${name}=`)
   if (parts.length === 2) return parts.pop().split(';').shift()
 }
+const id = Number(route.params.id)
 
+const token = localStorage.getItem('token');
 // Load dữ liệu địa chỉ theo id từ URL
 const loadAddress = async () => {
-  const id = route.params.id
+  
   try {
-    const response = await axios.get(`http://localhost:8080/api/user/addresses/${id}`)
+    const response = await axios.get(`http://localhost:8080/api/user/addresses/addressId/${id}`,{
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
     console.log('Address data:', response.data)
 
     // Gán trực tiếp nếu là object, không cần truy cập addresses[0]
@@ -71,7 +77,11 @@ const updateAddress = async () => {
   }
 
   try {
-    await axios.put(`http://localhost:8080/api/user/addresses/${address.value.id}`, address.value)
+    await axios.put(`http://localhost:8080/api/user/addresses/${address.value.id}`, address.value,{
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
     successMessage.value = 'Cập nhật địa chỉ thành công.'
     setTimeout(() => {
       router.push('/user/address')

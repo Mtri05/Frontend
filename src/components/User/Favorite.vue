@@ -4,6 +4,8 @@ import axios from 'axios'
 
 const favorites = ref([])
 
+const token = localStorage.getItem('token');
+
 // Lấy userId từ cookie
 const getCookie = (name) => {
   const value = `; ${document.cookie}`
@@ -22,7 +24,11 @@ const getFavorites = async () => {
   }
 
   try {
-    const response = await axios.get(`http://localhost:8080/api/favorites/${userId}`)
+    const response = await axios.get(`http://localhost:8080/api/user/favorites/${userId}`,{
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
     console.log('Dữ liệu nhận được từ API:', response.data) // Kiểm tra dữ liệu trả về từ API
     favorites.value = response.data
   } catch (error) {
@@ -45,7 +51,11 @@ const removeFavorite = async (productId) => {
 
   try {
     // Gọi API xóa sản phẩm yêu thích
-    await axios.delete(`http://localhost:8080/api/favorites/${userId}/${productId}`)
+    await axios.delete(`http://localhost:8080/api/user/favorites/${userId}/${productId}`,{
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
     // Sau khi xóa, cập nhật lại danh sách yêu thích
     getFavorites()
     console.log('Sản phẩm đã được xóa khỏi yêu thích')

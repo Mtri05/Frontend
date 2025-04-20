@@ -64,11 +64,16 @@ async function clearCart() {
     console.error('Lỗi xoá toàn bộ:', error)
   }
 }
-
+const token = localStorage.getItem('token');
 // Gọi API lấy địa chỉ của người dùng
 async function fetchAddresses() {
   try {
-    const response = await axios.get(`http://localhost:8080/api/addresses/user/${cartId}`)
+    const response = await axios.get(`http://localhost:8080/api/user/addresses/${cartId}`,{
+      headers: {
+    Authorization: `Bearer ${token}`,
+    
+  },
+    })
     addresses.value = response.data
 
     if (addresses.value.length > 0) {
@@ -102,13 +107,18 @@ async function placeOrder() {
   isPlacingOrder.value = true
   try {
     const response = await axios.post(`http://localhost:8080/api/user/order/checkout`, {
+      
       userId: cartId,
       address: `${selectedAddress.address}, ${selectedAddress.customerName}, ${selectedAddress.phone}`,
       items: filteredCart.value.map((item) => ({
         productSizeId: item.productSize.id,
         quantity: item.quantity,
-      })),
-    })
+      })),}, {
+        headers: {
+        Authorization: `Bearer ${token}`,
+        
+      },
+      })
 
     alert('Đặt hàng thành công!')
     showAddressList.value = false

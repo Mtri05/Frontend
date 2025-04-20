@@ -18,6 +18,7 @@ export default {
 
     // Gọi API lấy danh sách địa chỉ của user
     loadAddresses() {
+      const token = localStorage.getItem('token');
       const userId = this.getCookie('userId') // Lấy userId từ cookie
       if (!userId) {
         alert('Không tìm thấy userId trong cookie!')
@@ -26,7 +27,12 @@ export default {
 
       // Gọi API để lấy địa chỉ của user dựa trên userId
       axios
-        .get(`http://localhost:8080/api/user/addresses/${userId}`)
+        .get(`http://localhost:8080/api/user/addresses/${userId}`,{
+          headers: {
+            Authorization: `Bearer ${token}`,
+            
+          },
+        })
         .then((res) => {
           this.addresses = res.data // Cập nhật dữ liệu vào addresses
         })
@@ -37,9 +43,15 @@ export default {
 
     // Xóa địa chỉ
     deleteAddress(id) {
+      const token = localStorage.getItem('token');
       if (confirm('Bạn có chắc chắn muốn xóa?')) {
         axios
-          .delete(`http://localhost:8080/api/user/addresses/${id}`)
+          .delete(`http://localhost:8080/api/user/addresses/${id}`,{
+            headers: {
+            Authorization: `Bearer ${token}`,
+            
+          },
+          })
           .then(() => {
             this.loadAddresses() // Tải lại danh sách địa chỉ sau khi xóa
           })

@@ -10,6 +10,8 @@ const error = ref(null)
 const successMessage = ref(null)
 const router = useRouter()
 
+const token = localStorage.getItem('token');
+
 const changePassword = async () => {
   error.value = null
   successMessage.value = null
@@ -41,12 +43,18 @@ const changePassword = async () => {
   try {
     const userId = getCookie('userId') // Lấy id người dùng từ cookie
 
-    const response = await axios.post('http://localhost:8080/api/change-password', {
+    const response = await axios.post('http://localhost:8080/api/user/change-password', {
       id: userId,
       currentPassword: currentPassword.value,
       newPassword: newPassword.value,
       confirmPassword: confirmPassword.value
-    })
+    }, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  
+  )
 
     successMessage.value = 'Đổi mật khẩu thành công.'
     currentPassword.value = ''
