@@ -20,7 +20,7 @@ const initDataTable = () => {
 
 const loadUsers = async () => {
   try {
-    const response = await axios.get('http://localhost:8080/api/user/users')
+    const response = await axios.get('http://localhost:8080/api/admin/users')
     console.log(response.data)
     users.value = response.data
 
@@ -43,7 +43,7 @@ onMounted(() => {
 const updateStatus = async (userId, newStatus) => {
   try {
     const response = await axios.put(
-      `http://localhost:8080/api/user/users/${userId}/status`,
+      `http://localhost:8080/api/admin/users/${userId}/status`,
       newStatus,
       {
         headers: {

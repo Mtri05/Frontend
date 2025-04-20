@@ -6,7 +6,7 @@ const orders = ref([])
 
 onMounted(async () => {
   try {
-    const response = await axios.get('http://localhost:8080/api/order')
+    const response = await axios.get('http://localhost:8080/api/admin/order')
     orders.value = response.data
   } catch (err) {
     console.error(err)
@@ -16,7 +16,7 @@ onMounted(async () => {
 
 const updateStatus = async (item) => {
   try {
-    await axios.post(`http://localhost:8080/api/order/update-status/${item.orderId}`, {
+    await axios.post(`http://localhost:8080/api/admin/order/update-status/${item.orderId}`, {
       status: item.status,
     })
     alert('Cập nhật trạng thái thành công!')
@@ -79,7 +79,7 @@ const formatAddress = (address) => {
             <td>{{ formatAddress(item.address) }}</td>
             <td>
               <a
-                :href="`/admin/order/detail?orderId=${item.orderId}`"
+                :href="`/admin/admin/order/detail?orderId=${item.orderId}`"
                 class="btn btn-primary btn-sm"
                 >Chi tiết</a
               >

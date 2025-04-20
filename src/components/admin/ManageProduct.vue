@@ -23,7 +23,7 @@ const initDataTable = () => {
 // Hàm load dữ liệu và render bảng
 const loadProducts = async () => {
   try {
-    const response = await axios.get('http://localhost:8080/api/product/products')
+    const response = await axios.get('http://localhost:8080/api/admin/product/products')
     products.value = response.data
 
     await nextTick() // đảm bảo Vue render xong DOM

@@ -22,7 +22,7 @@ const errors = ref({})
 
 // Load all categories
 const loadCategories = async () => {
-  const res = await axios.get('http://localhost:8080/api/product/categories')
+  const res = await axios.get('http://localhost:8080/api/admin/product/categories')
   categories.value = res.data
 }
 
@@ -30,7 +30,7 @@ const loadCategories = async () => {
 const loadProduct = async () => {
   if (!productId) return
   try {
-    const res = await axios.get(`http://localhost:8080/api/product/${productId}`)
+    const res = await axios.get(`http://localhost:8080/api/admin/product/${productId}`)
     const product = res.data
     console.log(product)
 
@@ -65,13 +65,13 @@ const handleSubmit = async () => {
 
   try {
     if (productId) {
-      await axios.post(`http://localhost:8080/api/product/update/${productId}`, formData, {
+      await axios.post(`http://localhost:8080/api/admin/product/update/${productId}`, formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       })
       alert('Cập nhật thành công')
       router.push('/admin/product')
     } else {
-      await axios.post('http://localhost:8080/api/product/add', formData, {
+      await axios.post('http://localhost:8080/api/admin/product/add', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       })
       alert('Thêm thành công')

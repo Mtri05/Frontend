@@ -13,12 +13,12 @@ const quantities = ref({})
 const productName = ref('')
 
 const loadSizes = async () => {
-  const res = await axios.get('http://localhost:8080/api/product/size')
+  const res = await axios.get('http://localhost:8080/api/admin/product/size')
   allSizes.value = res.data
 }
 
 const loadProductName = async () => {
-  const res = await axios.get(`http://localhost:8080/api/product/${productId}`)
+  const res = await axios.get(`http://localhost:8080/api/admin/product/${productId}`)
   productName.value = res.data.name
 }
 
@@ -35,7 +35,7 @@ const submitSizes = async () => {
   }
 
   try {
-    await axios.post('http://localhost:8080/api/product/productSize/add', dataToSend)
+    await axios.post('http://localhost:8080/api/admin/product/productSize/add', dataToSend)
     alert('Thêm size thành công!')
     router.push(`/admin/product/sizes?productId=${productId}`)
   } catch (err) {
