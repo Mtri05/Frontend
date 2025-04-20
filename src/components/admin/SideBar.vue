@@ -21,8 +21,7 @@
         </li>
         <li class="menu-item">
           <a href="/admin/order" class="menu-link"
-            ><i class="fa fa-shopping-cart"></i>
-            <span class="menu-text">Đơn Hàng</span></a
+            ><i class="fa fa-shopping-cart"></i> <span class="menu-text">Đơn Hàng</span></a
           >
         </li>
         <li class="menu-item">
@@ -36,19 +35,14 @@
         style="position: absolute; bottom: 20px; left: 20px; width: calc(100% - 40px)"
       >
         <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
-          <img
-            src="https://github.com/mdo.png"
-            width="32"
-            height="32"
-            class="rounded-circle"
-          />
+          <img src="https://github.com/mdo.png" width="32" height="32" class="rounded-circle" />
           <strong class="dropdown-text">Admin</strong>
         </a>
         <ul class="dropdown-menu shadow">
           <li><a class="dropdown-item" href="#">Cài đặt</a></li>
           <li><a class="dropdown-item" href="#">Hồ sơ</a></li>
           <li><hr class="dropdown-divider" /></li>
-          <li><a class="dropdown-item" href="login.html">Đăng xuất</a></li>
+          <li><a class="dropdown-item" href="/login">Đăng xuất</a></li>
         </ul>
       </div>
     </nav>

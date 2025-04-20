@@ -16,23 +16,41 @@ const login = async () => {
     formData.append('password', password.value)
 
     const response = await axios.post('http://localhost:8080/api/login', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
+      headers: { 
+    
+  },
+      data: formData,
+      withCredentials: true,
     })
+    console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" , response);
+    // Kiểm tra xem response.data.user có tồn tại không
+    if (response.data && response.data.user) {
+      const user = response.data.user
+      const role = 0 // 0 = admin, 1 = user
 
-    const { token, user } = response.data
-    localStorage.setItem('token', token)
+      localStorage.setItem('token', response.data.token)
+      localStorage.setItem('role', role)
 
-    // Lưu thông tin người dùng vào cookie
-    document.cookie = `userId=${user.id}; path=/`
-    document.cookie = `userRole=${user.role}; path=/`
-    document.cookie = `userName=${user.name}; path=/`
-    document.cookie = `userEmail=${user.email}; path=/`
-    document.cookie = `userAvatar=${user.avatar}; path=/`
+      // Lưu thông tin người dùng vào cookie
+      document.cookie = `userId=${user.id}; path=/`
+      document.cookie = `userRole=${user.role}; path=/`
+      document.cookie = `userName=${user.name}; path=/`
+      document.cookie = `userEmail=${user.email}; path=/`
+      document.cookie = `userAvatar=${user.avatar}; path=/`
 
-    router.push('/')
+      // Phân quyền điều hướng
+      if (role === 0) {
+        router.push('/admin')
+      } else {
+        router.push('/')
+      }
+    } else {
+      // Nếu không có user, hiển thị lỗi
+      throw new Error('Không tìm thấy thông tin người dùng')
+    }
   } catch (err) {
+    // Log chi tiết lỗi để dễ dàng xem
+    console.log('Error during login:', response.data)
     error.value = err.response?.data || 'Lỗi hệ thống'
   }
 }

@@ -1,51 +1,109 @@
-<script></script>
+<script>
+import axios from 'axios'
+
+export default {
+  data() {
+    return {
+      addresses: [],
+    }
+  },
+  methods: {
+    // Lấy giá trị cookie theo tên
+    getCookie(name) {
+      const value = `; ${document.cookie}`
+      const parts = value.split(`; ${name}=`)
+      if (parts.length === 2) return parts.pop().split(';').shift()
+      return null
+    },
+
+    // Gọi API lấy danh sách địa chỉ của user
+    loadAddresses() {
+      const userId = this.getCookie('userId') // Lấy userId từ cookie
+      if (!userId) {
+        alert('Không tìm thấy userId trong cookie!')
+        return
+      }
+
+      // Gọi API để lấy địa chỉ của user dựa trên userId
+      axios
+        .get(`http://localhost:8080/api/addresses/user/${userId}`)
+        .then((res) => {
+          this.addresses = res.data // Cập nhật dữ liệu vào addresses
+        })
+        .catch((err) => {
+          console.error('Lỗi khi lấy địa chỉ:', err)
+        })
+    },
+
+    // Xóa địa chỉ
+    deleteAddress(id) {
+      if (confirm('Bạn có chắc chắn muốn xóa?')) {
+        axios
+          .delete(`http://localhost:8080/api/addresses/${id}`)
+          .then(() => {
+            this.loadAddresses() // Tải lại danh sách địa chỉ sau khi xóa
+          })
+          .catch((err) => {
+            console.error('Lỗi khi xóa:', err)
+          })
+      }
+    },
+  },
+
+  mounted() {
+    this.loadAddresses() // Gọi phương thức loadAddresses khi component được mount
+  },
+}
+</script>
 
 <template>
-  <div class="container mt-5">
-    <div class="row justify-content-center">
-      <div class="col-md-8 col-lg-6">
-    <h2 class="text-center">Hồ Sơ Cá Nhân</h2>
+  <div class="container mt-4">
+    <h2 class="text-center">📍 Danh Sách Địa Chỉ</h2>
 
-    <form th:action="@{/user/profile/update}" method="post" th:object="${user}">
-      <!-- Họ và tên -->
-      <div class="mb-3">
-        <label for="name" class="form-label">Họ và Tên:</label>
-        <input type="text" class="form-control" id="name" name="name" th:field="*{name}" />
-        <div class="text-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
-      </div>
+    <div class="mb-3">
+      <router-link to="/user/address/form" class="btn btn-primary">
+        <i class="bi bi-plus-circle"></i> Thêm Địa Chỉ
+      </router-link>
+    </div>
 
-      <!-- Email (chỉ hiển thị, không sửa) -->
-      <div class="mb-3">
-        <label for="email" class="form-label">Email:</label>
-        <input
-          type="email"
-          class="form-control"
-          id="email"
-          name="email"
-          th:field="*{email}"
-          readonly
-        />
-      </div>
-
-      <!-- Địa chỉ -->
-      <div class="mb-3">
-        <label for="address" class="form-label">Địa chỉ:</label>
-        <input type="text" class="form-control" id="address" name="address" th:field="*{address}" />
-        <div
-          class="text-danger"
-          th:if="${#fields.hasErrors('address')}"
-          th:errors="*{address}"
-        ></div>
-      </div>
-
-      <div class="d-flex justify-content-start gap-2">
-            <button type="submit" class="btn btn-primary">Cập Nhật</button>
-            <a href="/" class="btn btn-secondary">Quay lại</a>
-          </div>
-    </form>
+    <div class="table-responsive">
+      <table class="table table-bordered table-hover text-center align-middle">
+        <thead class="table-dark">
+          <tr>
+            <th>Tên Khách Hàng</th>
+            <th>Số Điện Thoại</th>
+            <th>Địa Chỉ</th>
+            <th>Hành Động</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="address in addresses" :key="address.id">
+            <td>{{ address.customerName }}</td>
+            <td>{{ address.phone }}</td>
+            <td>{{ address.address }}</td>
+            <td>
+              <div class="d-flex justify-content-center gap-2">
+                <router-link
+                  :to="`/user/address/edit/${address.id}`"
+                  class="btn btn-warning btn-sm"
+                >
+                  <i class="bi bi-pencil"></i> Sửa
+                </router-link>
+                <button class="btn btn-danger btn-sm" @click="deleteAddress(address.id)">
+                  <i class="bi bi-trash"></i> Xóa
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
-</div>
-</div>
 </template>
 
-<style src=""></style>
+<style scoped>
+.table th,
+.table td {
+  vertical-align: middle;
+}
+</style>

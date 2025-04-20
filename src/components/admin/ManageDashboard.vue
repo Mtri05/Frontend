@@ -1,73 +1,141 @@
 <script>
 import { Chart } from 'chart.js/auto'
+import axios from 'axios'
 
+const token = localStorage.getItem('token');
 export default {
-  name: 'Dashboard',
+  data() {
+    return {
+      orderCount: 0,
+      userCount: 0,
+      productCount: 0,
+      categoryCount: 0,
+      totalRevenue: 0,
+    }
+  },
+  methods: {
+    async loadStats() {
+      try {
+        const [orderRes, userRes, productRes, categoryRes] = await Promise.all([
+          axios.get('http://localhost:8080/api/admin/order',{
+            headers: {
+              Authorization: `Bearer ${token}`,
+              
+            },
+          }),
+          axios.get('http://localhost:8080/api/admin/users',{
+            headers: {
+            Authorization: `Bearer ${token}`,
+            
+          },
+          }),
+          axios.get('http://localhost:8080/api/admin/product/products',{
+            headers: {
+              Authorization: `Bearer ${token}`,
+              
+            },
+          }),
+          axios.get('http://localhost:8080/api/category/list'),
+        ])
+
+        const orders = orderRes.data
+        const completedOrders = orders.filter((order) => order.status === 3)
+
+        this.orderCount = orders.length
+        this.userCount = userRes.data.length
+        this.productCount = productRes.data.length
+        this.categoryCount = categoryRes.data.length
+        this.totalRevenue = completedOrders.reduce((sum, order) => sum + order.totalAmount, 0)
+
+        this.renderCharts(completedOrders, productRes.data)
+      } catch (error) {
+        console.error('Lỗi khi gọi API:', error)
+      }
+    },
+
+    renderCharts(orders, products) {
+      const revenuePerDay = {}
+      orders.forEach((order) => {
+        const date = order.orderDate.slice(0, 10)
+        revenuePerDay[date] = (revenuePerDay[date] || 0) + order.totalAmount
+      })
+
+      const labels = Object.keys(revenuePerDay)
+      const data = Object.values(revenuePerDay)
+
+      new Chart(this.$refs.revenueChart, {
+        type: 'line',
+        data: {
+          labels,
+          datasets: [
+            {
+              label: 'Doanh Thu (VND)',
+              data,
+              borderColor: '#007bff',
+              tension: 0.4,
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: { display: true },
+          },
+        },
+      })
+
+      const categoryMap = {}
+      products.forEach((product) => {
+        const name = product.categoryName
+        categoryMap[name] = (categoryMap[name] || 0) + 1
+      })
+
+      const prodLabels = Object.keys(categoryMap)
+      const prodData = Object.values(categoryMap)
+
+      new Chart(this.$refs.productChart, {
+        type: 'bar',
+        data: {
+          labels: prodLabels,
+          datasets: [
+            {
+              label: 'Số Lượng Sản Phẩm',
+              data: prodData,
+              backgroundColor: ['#007bff', '#28a745', '#ffc107', '#f44336'],
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: { display: true },
+          },
+        },
+      })
+
+      new Chart(this.$refs.customerChart, {
+        type: 'pie',
+        data: {
+          labels: ['Online', 'Cửa Hàng', 'Đại Lý'],
+          datasets: [
+            {
+              data: [60, 25, 15],
+              backgroundColor: ['#007bff', '#28a745', '#ffc107'],
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: { display: true },
+          },
+        },
+      })
+    },
+  },
   mounted() {
-    // Biểu đồ doanh thu
-    new Chart(this.$refs.revenueChart, {
-      type: 'line',
-      data: {
-        labels: ['Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7', 'Chủ Nhật'],
-        datasets: [{
-          label: 'Doanh Thu (VND)',
-          data: [1000000, 1500000, 2000000, 1800000, 2500000, 3000000, 4000000],
-          borderColor: '#007bff',
-          tension: 0.4
-        }]
-      },
-      options: {
-        responsive: true,
-        plugins: {
-          legend: {
-            display: true
-          }
-        }
-      }
-    });
-
-    // Biểu đồ sản phẩm
-    new Chart(this.$refs.productChart, {
-      type: 'bar',
-      data: {
-        labels: ['Giày Thể Thao', 'Giày Chạy Bộ', 'Giày Thời Trang'],
-        datasets: [{
-          label: 'Số Lượng Bán',
-          data: [50, 70, 30],
-          backgroundColor: ['#007bff', '#28a745', '#ffc107']
-        }]
-      },
-      options: {
-        responsive: true,
-        plugins: {
-          legend: {
-            display: true
-          }
-        }
-      }
-    });
-
-    // Biểu đồ khách hàng
-    new Chart(this.$refs.customerChart, {
-      type: 'pie',
-      data: {
-        labels: ['Online', 'Cửa Hàng', 'Đại Lý'],
-        datasets: [{
-          label: 'Tỷ Lệ (%)',
-          data: [50, 30, 20],
-          backgroundColor: ['#007bff', '#28a745', '#ffc107']
-        }]
-      },
-      options: {
-        responsive: true,
-        plugins: {
-          legend: {
-            display: true
-          }
-        }
-      }
-    });
-  }
+    this.loadStats()
+  },
 }
 </script>
 <template>
@@ -81,7 +149,7 @@ export default {
       </div>
       <div class="stat-info">
         <div class="stat-title">ĐƠN HÀNG</div>
-        <div class="stat-value">9 <a href="/admin/order">(Chi tiết)</a></div>
+        <div class="stat-value">{{ orderCount }} <a href="/admin/order">(Chi tiết)</a></div>
       </div>
     </div>
 
@@ -92,7 +160,7 @@ export default {
       </div>
       <div class="stat-info">
         <div class="stat-title">KHÁCH HÀNG</div>
-        <div class="stat-value">1 <a href="/admin/user">(Chi tiết)</a></div>
+        <div class="stat-value">{{ userCount }} <a href="/admin/user">(Chi tiết)</a></div>
       </div>
     </div>
 
@@ -103,7 +171,7 @@ export default {
       </div>
       <div class="stat-info">
         <div class="stat-title">SẢN PHẨM</div>
-        <div class="stat-value">6 <a href="/admin/product">(Chi tiết)</a></div>
+        <div class="stat-value">{{ productCount }} <a href="/admin/product">(Chi tiết)</a></div>
       </div>
     </div>
 
@@ -114,28 +182,27 @@ export default {
       </div>
       <div class="stat-info">
         <div class="stat-title">DANH MỤC</div>
-        <div class="stat-value">4 <a href="/admin/category">(Chi tiết)</a></div>
+        <div class="stat-value">{{ categoryCount }} <a href="/admin/category">(Chi tiết)</a></div>
       </div>
     </div>
   </div>
   <!-- Biểu đồ doanh thu nằm riêng -->
-<div class="chart-container">
-  <h3>Doanh Thu Theo Ngày</h3>
-  <canvas ref="revenueChart" width="300" height="100"></canvas>
-</div>
-
-<!-- Hàng chứa 2 biểu đồ nằm ngang -->
-<div class="chart-row">
-  <div class="chart-container half">
-    <h3>Sản Phẩm</h3>
-    <canvas ref="productChart" width="400" height="300"></canvas>
+  <div class="chart-container">
+    <h3>Doanh Thu Theo Ngày</h3>
+    <canvas ref="revenueChart" width="300" height="100"></canvas>
   </div>
-  <div class="chart-container half">
-    <h3>Nguồn Khách</h3>
-    <canvas ref="customerChart" width="400" height="300"></canvas>
-  </div>
-</div>
 
+  <!-- Hàng chứa 2 biểu đồ nằm ngang -->
+  <div class="chart-row">
+    <div class="chart-container half">
+      <h3>Sản Phẩm</h3>
+      <canvas ref="productChart" width="400" height="300"></canvas>
+    </div>
+    <div class="chart-container half">
+      <h3>Nguồn Khách</h3>
+      <canvas ref="customerChart" width="400" height="300"></canvas>
+    </div>
+  </div>
 </template>
 
 <style scoped>
@@ -225,5 +292,4 @@ export default {
 .chart-container.half {
   flex: 1;
 }
-
 </style>

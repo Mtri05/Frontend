@@ -1,0 +1,162 @@
+.cart-container-modern {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  background-color: #fff;
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+  border-radius: 8px;
+}
+
+/* Cart Title */
+.cart-title-modern {
+  color: #333;
+  font-weight: 600;
+  letter-spacing: -0.5px;
+  margin-bottom: 2rem !important;
+  text-transform: uppercase;
+  font-size: 1.8rem;
+  border-bottom: 2px solid #000;
+  padding-bottom: 0.5rem;
+  display: inline-block;
+}
+
+/* Cart Table */
+.cart-table-modern {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin-bottom: 2rem;
+}
+
+.cart-table-modern thead th {
+  background-color: #f8f9fa;
+  color: #333;
+  font-weight: 600;
+  padding: 1rem;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  letter-spacing: 0.5px;
+  border: none !important;
+}
+
+.cart-table-modern tbody td {
+  padding: 1.5rem 1rem;
+  vertical-align: middle;
+  border-top: 1px solid #eee !important;
+  border-bottom: 1px solid #eee !important;
+}
+
+/* Product Image */
+.cart-item-img-modern {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 4px;
+  border: 1px solid #eee;
+}
+
+/* Product Name */
+.cart-product-name-modern {
+  font-weight: 500;
+  color: #333;
+}
+
+/* Size Selector */
+.cart-size-select-modern {
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 0.5rem;
+  font-size: 0.9rem;
+  width: 100%;
+  max-width: 120px;
+  background-color: #fff;
+  transition: all 0.3s;
+}
+
+.cart-size-select-modern:focus {
+  border-color: #000;
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
+}
+
+/* Quantity Input */
+.cart-qty-input-modern {
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 0.5rem;
+  text-align: center;
+  max-width: 70px;
+  margin: 0 auto;
+  transition: all 0.3s;
+}
+
+.cart-qty-input-modern:focus {
+  border-color: #000;
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
+}
+
+/* Price Highlight */
+.cart-price-highlight-modern {
+  font-weight: 700;
+  color: #000 !important;
+  font-size: 1.1rem;
+}
+
+/* Remove Button */
+.cart-remove-btn-modern {
+  background-color: #000;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  font-weight: 500;
+  transition: all 0.3s;
+  color: white !important;
+}
+
+.cart-remove-btn-modern:hover {
+  background-color: #333;
+}
+
+/* Total Price */
+.cart-total-price-modern {
+  font-size: 1.3rem !important;
+  color: #000 !important;
+  letter-spacing: -0.5px;
+  padding: 1rem 0;
+  border-top: 2px solid #000;
+  margin-top: 1rem;
+}
+
+/* Clear Cart Button */
+.cart-clear-btn-modern {
+  color: #000;
+  border-color: #000;
+  font-weight: 500;
+  padding: 0.5rem 1.5rem;
+  border-radius: 4px;
+  transition: all 0.3s;
+}
+
+.cart-clear-btn-modern:hover {
+  background-color: #000;
+  color: #fff !important;
+}
+
+/* Empty Cart Message */
+.cart-empty-msg-modern {
+  background-color: #f8f9fa;
+  color: #333;
+  border: 1px solid #eee;
+  border-radius: 4px;
+  padding: 1.5rem;
+  text-align: center;
+  font-size: 1.1rem;
+}
+
+/* Hover Effect */
+.cart-item-row-modern {
+  transition: all 0.2s;
+}
+
+.cart-item-row-modern:hover {
+  background-color: #f9f9f9;
+}

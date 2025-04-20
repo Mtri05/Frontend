@@ -1,41 +1,85 @@
 <script>
+import axios from 'axios'
+
 export default {
   data() {
     return {
-      orders: [
-        { id: 1, dateCreated: '2024-04-01', totalAmount: 1200000, status: 0 },
-        { id: 2, dateCreated: '2024-04-02', totalAmount: 2500000, status: 3 },
-        { id: 3, dateCreated: '2024-04-03', totalAmount: 500000, status: 4 },
-      ],
+      orders: [],
     }
   },
   methods: {
-    formatCurrency(amount) {
-      return new Intl.NumberFormat('vi-VN').format(amount) + ' VND'
+    // Lấy userId từ cookie
+    getCookie(name) {
+      const value = `; ${document.cookie}`;
+      const parts = value.split(`; ${name}=`);
+      if (parts.length === 2) return parts.pop().split(';').shift();
+      return null;
     },
+
+    // Lấy danh sách đơn hàng từ server
+    loadOrders() {
+      const userId = this.getCookie('userId');
+      if (!userId) {
+        alert('Bạn chưa đăng nhập!');
+        return;
+      }
+
+      axios
+        .get('http://localhost:8080/api/user/order/list', {
+          withCredentials: true,
+        })
+        .then((res) => {
+          this.orders = res.data;
+        })
+        .catch((err) => {
+          console.error('Lỗi khi lấy đơn hàng:', err);
+        });
+    },
+
+    formatCurrency(amount) {
+      return new Intl.NumberFormat('vi-VN').format(amount) + ' VND';
+    },
+
+    formatDate(dateStr) {
+      const date = new Date(dateStr);
+      return date.toLocaleString('vi-VN');
+    },
+
     getStatusText(status) {
       switch (status) {
         case 0:
-          return { text: 'Chưa duyệt', class: 'text-warning' }
+          return { text: 'Chưa duyệt', class: 'text-warning' };
         case 1:
-          return { text: 'Đã duyệt', class: 'text-primary' }
+          return { text: 'Đã duyệt', class: 'text-primary' };
         case 2:
-          return { text: 'Đang giao', class: 'text-info' }
+          return { text: 'Đang giao', class: 'text-info' };
         case 3:
-          return { text: 'Giao thành công', class: 'text-success' }
+          return { text: 'Giao thành công', class: 'text-success' };
         case 4:
-          return { text: 'Đã hủy', class: 'text-danger' }
+          return { text: 'Đã hủy', class: 'text-danger' };
         default:
-          return { text: 'Không xác định', class: 'text-secondary' }
+          return { text: 'Không xác định', class: 'text-secondary' };
       }
     },
+
     confirmCancel(orderId) {
       if (confirm('Bạn có chắc muốn hủy đơn hàng này không?')) {
-        this.orders = this.orders.map((order) =>
-          order.id === orderId ? { ...order, status: 4 } : order,
-        )
+        axios
+          .post(`http://localhost:8080/api/user/order/update-status/${orderId}`, {
+            status: 4,
+          })
+          .then(() => {
+            this.loadOrders();
+          })
+          .catch((err) => {
+            console.error('Lỗi khi hủy đơn hàng:', err);
+          });
       }
     },
+  },
+
+  mounted() {
+    this.loadOrders();
   },
 }
 </script>
@@ -54,18 +98,18 @@ export default {
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(order, index) in orders" :key="order.id">
+        <tr v-for="(order, index) in orders" :key="order.orderId">
           <td>{{ index + 1 }}</td>
-          <td>{{ order.dateCreated }}</td>
+          <td>{{ formatDate(order.orderDate) }}</td>
           <td class="text-danger">{{ formatCurrency(order.totalAmount) }}</td>
           <td :class="getStatusText(order.status).class">
             {{ getStatusText(order.status).text }}
           </td>
           <td>
-            <a :href="'/user/order/details/' + order.id" class="btn btn-primary btn-sm">Xem</a>
+            <a :href="`/user/order/details?orderId=${order.orderId}`" class="btn btn-primary btn-sm">Xem</a>
             <button
               v-if="order.status === 0"
-              @click="confirmCancel(order.id)"
+              @click="confirmCancel(order.orderId)"
               class="btn btn-danger btn-sm"
             >
               Hủy đơn hàng

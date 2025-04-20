@@ -1,6 +1,71 @@
 <script setup>
-import "@/assets/main.js";
+import { ref, onMounted } from 'vue'
+import axios from 'axios'
+
+const favorites = ref([])
+
+// Lấy userId từ cookie
+const getCookie = (name) => {
+  const value = `; ${document.cookie}`
+  const parts = value.split(`; ${name}=`)
+  if (parts.length === 2) return parts.pop().split(';').shift()
+}
+
+// Lấy danh sách yêu thích của user
+const getFavorites = async () => {
+  const userId = getCookie('userId') // Lấy userId từ cookie
+  console.log('UserId:', userId) // Kiểm tra giá trị userId
+
+  if (!userId) {
+    console.log('Không tìm thấy userId trong cookie')
+    return
+  }
+
+  try {
+    const response = await axios.get(`http://localhost:8080/api/favorites/${userId}`)
+    console.log('Dữ liệu nhận được từ API:', response.data) // Kiểm tra dữ liệu trả về từ API
+    favorites.value = response.data
+  } catch (error) {
+    console.error('Lỗi khi lấy danh sách yêu thích:', error)
+  }
+}
+
+// Gọi hàm khi component được gắn kết (mounted)
+onMounted(() => {
+  getFavorites()
+})
+
+// Hàm để xóa sản phẩm yêu thích
+const removeFavorite = async (productId) => {
+  const userId = getCookie('userId')
+  if (!userId) {
+    console.log('Không tìm thấy userId trong cookie')
+    return
+  }
+
+  try {
+    // Gọi API xóa sản phẩm yêu thích
+    await axios.delete(`http://localhost:8080/api/favorites/${userId}/${productId}`)
+    // Sau khi xóa, cập nhật lại danh sách yêu thích
+    getFavorites()
+    console.log('Sản phẩm đã được xóa khỏi yêu thích')
+  } catch (error) {
+    console.error('Lỗi khi xóa sản phẩm yêu thích:', error)
+  }
+}
+
+const formatPrice = (price) => {
+  return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+}
+
+// Phương thức lấy URL của hình ảnh, trả về ảnh mặc định nếu không có hình ảnh
+const getImageUrl = (imageName) => {
+  return imageName
+    ? `http://localhost:8080/images/${imageName}`
+    : 'http://localhost:8080/images/default-product-image.jpg'
+}
 </script>
+
 <template>
   <div class="container my-2">
     <div class="d-flex align-items-center mb-4">
@@ -10,30 +75,32 @@ import "@/assets/main.js";
       <span class="mx-1 text-muted">|</span>
       <span class="text-dark">Trang yêu thích</span>
     </div>
+
+    <!-- Hiển thị danh sách sản phẩm yêu thích -->
     <div class="row g-3" id="productsContainer">
-      <div class="col-md-3 col-sm-6 mb-4" th:each="favorite : ${favorites}">
+      <div v-if="favorites.length === 0" class="col-12">
+        <p>Không có sản phẩm yêu thích nào.</p>
+      </div>
+
+      <div v-for="favorite in favorites" :key="favorite.id" class="col-md-3 col-sm-6 mb-4">
         <div class="product-card text-center">
+          <!-- Biểu tượng yêu thích có thể được bấm để xóa sản phẩm khỏi danh sách -->
           <a
             class="bi bi-heart-fill text-danger favorite-icon"
-            th:data-product-id="${favorite.product.id}"
-            onclick="removeFavorite(this)"
+            :data-product-id="favorite.productId"
+            @click="removeFavorite(favorite.productId)"
           ></a>
-          <!-- Kiểm tra nếu sản phẩm có ảnh -->
-          <img
-            th:if="${not #lists.isEmpty(favorite.product.images)}"
-            th:src="@{'/images/' + ${favorite.product.images[0].name}}"
-            th:alt="${favorite.product.name}"
-            class="img-fluid"
-          />
 
-          <h5 class="mt-2" th:text="${favorite.product.name}"></h5>
+          <!-- Kiểm tra nếu sản phẩm có ảnh, nếu không thì dùng ảnh mặc định -->
+          <img :src="getImageUrl(favorite.productImage)" alt="Product Image" class="img-fluid" />
 
-          <p
-            th:text="${#numbers.formatDecimal(favorite.product.price, 0, 'COMMA', 0, 'POINT')} + ' VND'"
-          ></p>
+          <h5 class="mt-2">{{ favorite.productName }}</h5>
+
+          <!-- Sử dụng phương thức formatCurrency để hiển thị giá tiền -->
+          <p>{{ formatPrice(favorite.productPrice) }} VND</p>
 
           <a
-            th:href="@{'/product/detail?productId=' + ${favorite.product.id}}"
+            :href="'/product/detail?productId=' + favorite.productId"
             class="btn btn-primary btn-sm"
             >Chi Tiết</a
           >
@@ -42,4 +109,5 @@ import "@/assets/main.js";
     </div>
   </div>
 </template>
+
 <style src="./src/assets/css/main.css"></style>

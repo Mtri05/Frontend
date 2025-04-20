@@ -5,7 +5,8 @@ import axios from 'axios'
 const products = ref([])
 let dataTable = null
 
-// Hàm khởi tạo DataTable
+const token = localStorage.getItem('token');
+
 const initDataTable = () => {
   const table = $('#productTable')
   if ($.fn.dataTable.isDataTable('#productTable')) {
@@ -20,10 +21,14 @@ const initDataTable = () => {
   })
 }
 
-// Hàm load dữ liệu và render bảng
 const loadProducts = async () => {
   try {
-    const response = await axios.get('http://localhost:8080/api/product/products')
+    const response = await axios.get('http://localhost:8080/api/admin/product/products',{
+      headers: {
+        Authorization: `Bearer ${token}`,
+    
+      },
+    })
     products.value = response.data
 
     await nextTick() // đảm bảo Vue render xong DOM
@@ -96,7 +101,7 @@ onMounted(() => {
               <a :href="`/admin/product/images?productId=${item.id}`">
                 <button class="btn btn-secondary btn-sm">Xem ảnh</button>
               </a>
-              <a :href="`/admin/product/size?productId=${item.id}`">
+              <a :href="`/admin/product/sizes?productId=${item.id}`">
                 <button class="btn btn-primary btn-sm">Số Lượng</button>
               </a>
             </td>
@@ -106,5 +111,3 @@ onMounted(() => {
     </div>
   </div>
 </template>
-
-

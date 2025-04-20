@@ -1,12 +1,12 @@
 <script setup>
 import SideBar from '../components/admin/SideBar.vue'
-import ManageOrder from '../components/admin/ManageOrder.vue'
+import ManageAddress from '../components/admin/ManageAddress.vue'
 </script>
 <template>
   <main class="admin-layout">
     <SideBar />
     <div class="content">
-      <ManageOrder />
+      <ManageAddress />
     </div>
   </main>
 </template>
@@ -29,3 +29,4 @@ import ManageOrder from '../components/admin/ManageOrder.vue'
   }
 }
 </style>
+

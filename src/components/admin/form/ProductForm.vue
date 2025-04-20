@@ -1,110 +1,131 @@
 <script setup>
+<<<<<<< HEAD
 import { ref, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import { useRouter } from "vue-router";
 import axios from "axios"
+=======
+import { ref, onMounted } from 'vue'
+import { useRoute } from 'vue-router'
+import { useRouter } from 'vue-router'
+import axios from 'axios'
+>>>>>>> f5f87a2ed645585f6b1b82863b80439b36e6440d
 
-const route = useRoute();
-const router = useRouter();
-const productId = Number(route.query.productId);
+const route = useRoute()
+const router = useRouter()
+const productId = Number(route.query.productId)
+
+const token = localStorage.getItem('token');
 
 const form = ref({
-  name: "",
-  description: "",
+  name: '',
+  description: '',
   price: 0,
   status: true,
-  categoryId: "",
+  categoryId: '',
   images: [],
-});
+})
 
-const categories = ref([]);
-const errors = ref({});
+const categories = ref([])
+const errors = ref({})
 
 // Load all categories
 const loadCategories = async () => {
-  const res = await axios.get("http://localhost:8080/api/product/categories");
-  categories.value = res.data;
-};
+  const res = await axios.get('http://localhost:8080/api/admin/product/categories',{
+    headers: {
+    Authorization: `Bearer ${token}`,
+    
+  },
+  })
+  categories.value = res.data
+}
 
 // Load product details if editing
 const loadProduct = async () => {
-  if (!productId) return;
+  if (!productId) return
   try {
-    const res = await axios.get(`http://localhost:8080/api/product/${productId}`);
-    const product = res.data;
-    console.log(product);
+    const res = await axios.get(`http://localhost:8080/api/admin/product/${productId}`,{
+      headers: {
+    Authorization: `Bearer ${token}`,
+    
+  },
+    })
+    const product = res.data
+    console.log(product)
 
-    form.value.name = product.name;
-    form.value.description = product.description;
-    form.value.price = product.price;
-    form.value.status = product.status;
-    form.value.categoryId = product.categoryId;
-    form.value.categoryNames = product.categoryNames;
+    form.value.name = product.name
+    form.value.description = product.description
+    form.value.price = product.price
+    form.value.status = product.status
+    form.value.categoryId = product.category.id
+    form.value.categoryNames = product.categoryNames
   } catch (err) {
-    console.error("Cannot load product", err);
+    console.error('Cannot load product', err)
   }
-};
+}
 
 onMounted(async () => {
-  await loadCategories();
-  await loadProduct();
-});
+  await loadCategories()
+  await loadProduct()
+})
 
 const handleSubmit = async () => {
-  const formData = new FormData();
-  formData.append("name", form.value.name);
-  formData.append("description", form.value.description);
-  formData.append("price", form.value.price);
-  formData.append("status", form.value.status);
-  formData.append("categoryId", form.value.categoryId);
+  const formData = new FormData()
+  formData.append('name', form.value.name)
+  formData.append('description', form.value.description)
+  formData.append('price', form.value.price)
+  formData.append('status', form.value.status)
+  formData.append('categoryId', form.value.categoryId)
   if (form.value.images.length > 0) {
     for (const img of form.value.images) {
-      formData.append("images", img);
+      formData.append('images', img)
     }
   }
 
   try {
     if (productId) {
-      await axios.post(
-        `http://localhost:8080/api/product/update/${productId}`,
-        formData,
-        {
-          headers: { "Content-Type": "multipart/form-data" },
-        }
-      );
-      alert("Cập nhật thành công");
-      router.push("/admin/product");
+      await axios.post(`http://localhost:8080/api/admin/product/update/${productId}`, formData, {
+        headers: { 
+          'Content-Type': 'multipart/form-data' ,
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      alert('Cập nhật thành công')
+      router.push('/admin/product')
     } else {
-      await axios.post("http://localhost:8080/api/product/add", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
-      alert("Thêm thành công");
-      router.push("/admin/product");
+      await axios.post('http://localhost:8080/api/admin/product/add', formData, {
+        headers: { 'Content-Type': 'multipart/form-data',
+        Authorization: `Bearer ${token}`,
+         },
+        
+      })
+      alert('Thêm thành công')
+      router.push('/admin/product')
     }
 
     form.value = {
-      name: "",
-      description: "",
+      name: '',
+      description: '',
       price: 0,
       status: true,
-      categoryId: "",
+      categoryId: '',
       images: [],
-    };
-    errors.value = {};
+    }
+    errors.value = {}
   } catch (err) {
     if (err.response?.data) {
-      errors.value = err.response.data;
+      errors.value = err.response.data
     } else {
-      console.error("Unknown error", err);
+      console.error('Unknown error', err)
     }
   }
-};
+}
 </script>
 
 <template>
   <div class="container p-3">
     <div class="form-container shadow p-4 rounded bg-light">
-      <h5 class="text-center mb-4">{{ productId ? "Sửa sản phẩm" : "Thêm sản phẩm" }}</h5>
+      <h5 class="text-center mb-4">{{ productId ? 'Sửa sản phẩm' : 'Thêm sản phẩm' }}</h5>
       <form @submit.prevent="handleSubmit">
         <!-- Tên sản phẩm -->
         <div class="mb-3">
@@ -179,7 +200,7 @@ const handleSubmit = async () => {
         <!-- Nút hành động -->
         <div class="mb-2">
           <button type="submit" class="btn btn-primary me-2">
-            {{ productId ? "Sửa sản phẩm" : "Thêm sản phẩm" }}
+            {{ productId ? 'Sửa sản phẩm' : 'Thêm sản phẩm' }}
           </button>
           <a href="/admin/product" class="btn btn-secondary">Quay lại</a>
         </div>

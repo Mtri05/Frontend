@@ -1,15 +1,58 @@
 <script setup>
-import { onMounted, nextTick } from "vue";
+import { ref, onMounted, nextTick } from 'vue'
+import axios from 'axios'
+
+const orders = ref([])
+
+
+const token = localStorage.getItem('token');
 
 onMounted(async () => {
-  await nextTick();
-  $("#orderTable").DataTable({
-    responsive: true,
-    language: {
-      url: "//cdn.datatables.net/plug-ins/1.13.6/i18n/vi.json",
-    },
-  });
-});
+  try {
+    const response = await axios.get('http://localhost:8080/api/admin/order',{
+      headers: {
+    Authorization: `Bearer ${token}`,
+    
+  },
+    })
+    orders.value = response.data
+  } catch (err) {
+    console.error(err)
+    document.getElementById('error-message').style.display = 'block'
+  }
+})
+
+const updateStatus = async (item) => {
+  try {
+    await axios.post(`http://localhost:8080/api/admin/order/update-status/${item.orderId}`,
+    {
+      status: item.status,
+    }, 
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+    
+      },
+    })
+    
+    alert('Cập nhật trạng thái thành công!')
+  } catch (err) {
+    console.error(err)
+    alert('Cập nhật thất bại!')
+  }
+}
+const formatAddress = (address) => {
+  if (!address) return ''
+  const parts = address.split(',')
+  // Bỏ phần cuối cùng nếu có ít nhất 2 phần (ví dụ: tên, số điện thoại)
+  if (parts.length > 2) {
+    return parts
+      .slice(0, parts.length - 2)
+      .join(',')
+      .trim()
+  }
+  return address.trim()
+}
 </script>
 
 <template>
@@ -24,7 +67,7 @@ onMounted(async () => {
           <tr>
             <th>ID</th>
             <th>Tên</th>
-            <!-- <th>Số điện thoại</th> -->
+            <th>Số điện thoại</th>
             <th>Trạng thái</th>
             <th>Ngày tạo</th>
             <th>Tổng tiền</th>
@@ -32,54 +75,32 @@ onMounted(async () => {
             <th>Hành động</th>
           </tr>
         </thead>
+
         <tbody>
-          <th:block th:each="item : ${orders}">
-            <tr>
-              <td th:text="${item.id}"></td>
-              <td th:text="${item.address.customerName}"></td>
-              <td>
-                <form
-                  th:action="@{/admin/order/update-status/{id}(id=${item.id})}"
-                  method="post"
-                >
-                  <select
-                    name="status"
-                    class="form-select form-select-sm"
-                    onchange="this.form.submit()"
-                    th:disabled="${item.status == 4}"
-                  >
-                    <option th:value="0" th:selected="${item.status == 0}">
-                      Chưa duyệt
-                    </option>
-                    <option th:value="1" th:selected="${item.status == 1}">
-                      Đã duyệt
-                    </option>
-                    <option th:value="2" th:selected="${item.status == 2}">
-                      Đang giao
-                    </option>
-                    <option th:value="3" th:selected="${item.status == 3}">
-                      Giao thành công
-                    </option>
-                    <option th:value="4" th:selected="${item.status == 4}">
-                      Hủy đơn
-                    </option>
-                  </select>
-                </form>
-              </td>
-              <td th:text="${item.dateCreated}"></td>
-              <td
-                th:text="${#numbers.formatDecimal(item.totalAmount, 0, 'COMMA', 0, 'POINT')} + ' VND'"
-              ></td>
-              <td th:text="${item.address.address}"></td>
-              <td>
-                <a
-                  th:href="@{/admin/order/detail(orderId=${item.id})}"
-                  class="btn btn-primary btn-sm"
-                  >Chi tiết</a
-                >
-              </td>
-            </tr>
-          </th:block>
+          <tr v-for="item in orders" :key="item.orderId">
+            <td>{{ item.orderId }}</td>
+            <td>{{ item.customerName }}</td>
+            <td>{{ item.phone }}</td>
+            <td>
+              <select v-model="item.status" @change="updateStatus(item)">
+                <option :value="0">Chưa duyệt</option>
+                <option :value="1">Đã duyệt</option>
+                <option :value="2">Đang giao</option>
+                <option :value="3">Giao thành công</option>
+                <option :value="4">Hủy đơn</option>
+              </select>
+            </td>
+            <td>{{ item.orderDate }}</td>
+            <td>{{ item.totalAmount.toLocaleString() }} VND</td>
+            <td>{{ formatAddress(item.address) }}</td>
+            <td>
+              <a
+                :href="`/admin/admin/order/detail?orderId=${item.orderId}`"
+                class="btn btn-primary btn-sm"
+                >Chi tiết</a
+              >
+            </td>
+          </tr>
         </tbody>
       </table>
     </div>

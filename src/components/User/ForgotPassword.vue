@@ -41,6 +41,7 @@ const handleForgotPassword = async (e) => {
 </script>
 
 <template>
+  <!-- COD -->
   <div class="forgotpassword-container">
     <div class="card p-4 shadow" style="max-width: 400px; width: 100%">
       <!-- Logo -->
