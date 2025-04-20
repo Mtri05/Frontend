@@ -39,7 +39,7 @@ const submitReview = async () => {
   }
 
   try {
-    await axios.post('http://localhost:8080/api/reviews', {
+    await axios.post('http://localhost:8080/api/user/reviews', {
       orderDetailId,
       rating: rating.value,
       comment: comment.value,

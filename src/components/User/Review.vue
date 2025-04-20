@@ -129,7 +129,7 @@ export default {
     async checkIfPurchased() {
       try {
         const res = await fetch(
-          `http://localhost:8080/api/reviews/checkUser/${this.userId}/checkProduct/${this.productId}`
+          `http://localhost:8080/api/user/reviews/checkUser/${this.userId}/checkProduct/${this.productId}`
         )
         const data = await res.json()
 
@@ -154,7 +154,7 @@ export default {
     async submitReview() {
       try {
         const res = await fetch(
-          `http://localhost:8080/api/reviews/checkUser/${this.userId}/checkProduct/${this.productId}`
+          `http://localhost:8080/api/user/reviews/checkUser/${this.userId}/checkProduct/${this.productId}`
         )
         if (!res.ok) throw new Error('Không thể kiểm tra đơn hàng.')
 
