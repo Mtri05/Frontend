@@ -50,7 +50,7 @@ const login = async () => {
   } catch (err) {
     // Log chi tiết lỗi để dễ dàng xem
     console.log('Error during login:', err)
-    error.value = err.response?.data?.message || 'Lỗi hệ thống'
+    error.value = err.response?.data || 'Lỗi hệ thống'
   }
 }
 </script>

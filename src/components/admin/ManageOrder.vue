@@ -25,6 +25,18 @@ const updateStatus = async (item) => {
     alert('Cập nhật thất bại!')
   }
 }
+const formatAddress = (address) => {
+  if (!address) return ''
+  const parts = address.split(',')
+  // Bỏ phần cuối cùng nếu có ít nhất 2 phần (ví dụ: tên, số điện thoại)
+  if (parts.length > 2) {
+    return parts
+      .slice(0, parts.length - 2)
+      .join(',')
+      .trim()
+  }
+  return address.trim()
+}
 </script>
 
 <template>
@@ -39,7 +51,7 @@ const updateStatus = async (item) => {
           <tr>
             <th>ID</th>
             <th>Tên</th>
-            <!-- <th>Số điện thoại</th> -->
+            <th>Số điện thoại</th>
             <th>Trạng thái</th>
             <th>Ngày tạo</th>
             <th>Tổng tiền</th>
@@ -47,10 +59,12 @@ const updateStatus = async (item) => {
             <th>Hành động</th>
           </tr>
         </thead>
+
         <tbody>
           <tr v-for="item in orders" :key="item.orderId">
             <td>{{ item.orderId }}</td>
             <td>{{ item.customerName }}</td>
+            <td>{{ item.phone }}</td>
             <td>
               <select v-model="item.status" @change="updateStatus(item)">
                 <option :value="0">Chưa duyệt</option>
@@ -62,7 +76,7 @@ const updateStatus = async (item) => {
             </td>
             <td>{{ item.orderDate }}</td>
             <td>{{ item.totalAmount.toLocaleString() }} VND</td>
-            <td>{{ item.address }}</td>
+            <td>{{ formatAddress(item.address) }}</td>
             <td>
               <a
                 :href="`/admin/order/detail?orderId=${item.orderId}`"

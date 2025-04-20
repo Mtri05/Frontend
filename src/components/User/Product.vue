@@ -78,39 +78,61 @@ const filteredProducts = computed(() => {
   return filtered
 })
 
+const getImageUrl = (imageName) => {
+  return imageName
+    ? `http://localhost:8080/images/${imageName}`
+    : 'http://localhost:8080/images/default-product-image.jpg'
+}
+
 const formatPrice = (price) => {
   return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
 }
+
 
 onMounted(async () => {
   await fetchProducts()
   await fetchCategories()
   await fetchFavorites()
 })
+
 </script>
 
 
 <template>
-  <div class="row g-3">
+  <div class="container my-2">
+    <div class="d-flex align-items-center mb-4">
+      <a href="/" class="text-decoration-none d-flex align-items-center">
+        <i class="bi bi-house-fill text-dark me-2"></i>
+      </a>
+      <span class="mx-1 text-muted">|</span>
+      <span class="text-dark">Trang sản phẩm</span>
+    </div>
+  <div class="row g-3" id="productsContainer">
     <template v-for="product in filteredProducts" :key="product.id">
       <div class="col-md-3 col-sm-6 mb-4" v-if="product.status && product.category?.status">
         <div class="product-card text-center">
+          <!-- Nút yêu thích -->
+          <a
+            class="bi favorite-icon"
+            :class="isFavorite(product.id) ? 'bi-heart-fill text-danger' : 'bi-heart text-muted'"
+            @click.prevent="toggleFavorite(product.id)"
+            style="position: absolute; cursor: pointer;"
+          ></a>
+
+          <!-- Ảnh sản phẩm -->
           <img
-            v-if="product.imageNames && product.imageNames.length"
-            :src="`http://localhost:8080/images/${product.imageNames[0]}`"
+            :src="getImageUrl(product.imageNames?.[0])"
+            alt="Product Image"
             class="img-fluid"
-            :alt="product.name"
           />
-          <h5>{{ product.name }}</h5>
+
+          <!-- Tên sản phẩm -->
+          <h5 class="mt-2">{{ product.name }}</h5>
+
+          <!-- Giá -->
           <p>{{ formatPrice(product.price) }} VND</p>
 
-          <button
-            class="btn btn-outline-danger btn-sm me-2"
-            @click="toggleFavorite(product.id)"
-          >
-            <i :class="isFavorite(product.id) ? 'bi bi-heart-fill' : 'bi bi-heart'"></i>
-          </button>
-
+          <!-- Nút chi tiết -->
           <router-link
             :to="`/product/detail?productId=${product.id}`"
             class="btn btn-primary btn-sm"
@@ -121,12 +143,9 @@ onMounted(async () => {
       </div>
     </template>
   </div>
+</div>
 </template>
 
 
-<style scoped>
-.product-card img {
-  max-height: 200px;
-  object-fit: cover;
-}
-</style>
+
+<style src="./src/assets/css/main.css"></style>

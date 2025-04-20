@@ -1,0 +1,36 @@
+.rating-stars .star {
+  font-size: 2.5rem;
+  cursor: pointer;
+  transition: color 0.2s;
+  color: #ccc;
+}
+
+.rating-stars .star.hovered,
+.rating-stars .star.selected {
+  color: gold;
+}
+
+.card-review {
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+  border-radius: 10px;
+}
+.rating {
+  direction: rtl;
+  unicode-bidi: bidi-override;
+  display: flex;
+  justify-content: center;
+}
+.rating input[type='radio'] {
+  display: none;
+}
+.rating label {
+  font-size: 2.5rem;
+  color: #ccc;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.rating input:checked ~ label,
+.rating label:hover,
+.rating label:hover ~ label {
+  color: gold;
+}

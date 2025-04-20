@@ -137,5 +137,9 @@ function setupMainSlider() {
                 // Xử lý gì đó
             });
         });
+        setInterval(() => {
+            const items = document.querySelectorAll('.item');
+            slide.appendChild(items[0]);
+        }, 3000);
     }
 }
