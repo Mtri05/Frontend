@@ -9,8 +9,15 @@
     <!-- Trung bình sao -->
     <div class="text-center mb-4">
       <h4>Đánh giá trung bình:</h4>
-      <div class="d-flex justify-content-center align-items-center mb-2">
-        <span class="star">{{ averageRating }}☆☆☆☆☆</span>
+      <div class="d-flex justify-content-center align-items-center mb-2 rating-stars">
+        <span
+          v-for="n in 5"
+          :key="n"
+          :class="['star', n <= Math.round(averageRating) ? 'text-warning' : 'text-secondary']"
+        >
+          ★
+        </span>
+        <span class="ms-2 fw-bold">{{ averageRating }}/5</span>
       </div>
       <div>
         <small class="text-muted">({{ reviews.length }} đánh giá)</small>
@@ -20,23 +27,58 @@
     <!-- Danh sách đánh giá -->
     <h5 class="mb-3">Đánh giá gần đây</h5>
 
-    <div v-for="review in reviews" :key="review.id" class="card card-review mb-3">
+    <div v-for="(review, index) in limitedReviews" :key="review.id" class="card card-review mb-3">
       <div class="card-body">
         <div class="d-flex justify-content-between">
           <strong>{{ review.userName }}</strong>
-          <small class="text-muted">{{ review.reviewDate }}</small>
+          <small class="text-muted">{{ formatDate(review.reviewDate) }}</small>
         </div>
-        <div class="star mt-1 mb-2">
-          {{ '★'.repeat(review.rating) }}{{ '☆'.repeat(5 - review.rating) }}
+        <div class="rating-stars mt-1 mb-2">
+          <span
+            v-for="n in 5"
+            :key="n"
+            :class="['star', n <= review.rating ? 'text-warning' : 'text-secondary']"
+          >
+            ★
+          </span>
         </div>
-        <p>{{ review.comment }}</p>
+
+        <p>
+          {{ review.comment.length > 100 ? review.comment.substring(0, 100) + '...' : review.comment }}
+        </p>
+
+        <button v-if="review.comment.length > 100" @click="toggleReview(index)" class="btn btn-link p-0">
+          {{ review.isExpanded ? 'Thu gọn' : 'Xem thêm' }}
+        </button>
+
+        <p v-if="review.isExpanded">{{ review.comment }}</p>
       </div>
+    </div>
+
+    <!-- Nút điều khiển hiển thị -->
+    <div class="text-center" v-if="reviews.length > 3">
+      <button
+        class="btn btn-outline-primary me-2"
+        v-if="visibleCount < reviews.length"
+        @click="visibleCount = reviews.length"
+      >
+        Xem thêm đánh giá
+      </button>
+
+      <button
+        class="btn btn-outline-secondary"
+        v-if="visibleCount >= reviews.length"
+        @click="visibleCount = 3"
+      >
+        Ẩn bớt đánh giá
+      </button>
     </div>
   </div>
 </template>
 
 <script>
 import { getReviewsByProduct, createReview } from '@/assets/js/reviewAPI'
+
 export default {
   props: {
     productId: {
@@ -59,17 +101,25 @@ export default {
       averageRating: 0,
       hasPurchased: false,
       canReview: false,
-      orderDetailId: null
+      orderDetailId: null,
+      visibleCount: 3,
     }
   },
+  computed: {
+    limitedReviews() {
+      return this.reviews.slice(0, this.visibleCount)
+    },
+  },
   created() {
-    this.fetchReviews(), this.checkIfPurchased()
+    this.fetchReviews()
+    this.checkIfPurchased()
   },
   methods: {
     async fetchReviews() {
       try {
         const response = await getReviewsByProduct(this.productId)
-        this.reviews = response.data
+        this.reviews = response.data.sort((a, b) => new Date(b.reviewDate) - new Date(a.reviewDate))
+        this.reviews.forEach(r => r.isExpanded = false)
         this.calculateAverageRating()
       } catch (error) {
         console.error('Error fetching reviews:', error)
@@ -77,23 +127,23 @@ export default {
     },
 
     async checkIfPurchased() {
-  try {
-    const res = await fetch(
-      `http://localhost:8080/api/reviews/checkUser/${this.userId}/checkProduct/${this.productId}`
-    );
-    const data = await res.json();
+      try {
+        const res = await fetch(
+          `http://localhost:8080/api/reviews/checkUser/${this.userId}/checkProduct/${this.productId}`
+        )
+        const data = await res.json()
 
-    if (data.hasPurchased && !data.hasReviewed) {
-      this.canReview = true;
-      this.orderDetailId = data.orderDetailId;
-    } else {
-      this.canReview = false;
-    }
-  } catch (error) {
-    console.error('Lỗi kiểm tra đơn hàng:', error);
-    this.canReview = false;
-  }
-},
+        if (data.hasPurchased && !data.hasReviewed) {
+          this.canReview = true
+          this.orderDetailId = data.orderDetailId
+        } else {
+          this.canReview = false
+        }
+      } catch (error) {
+        console.error('Lỗi kiểm tra đơn hàng:', error)
+        this.canReview = false
+      }
+    },
 
     calculateAverageRating() {
       if (this.reviews.length === 0) return
@@ -104,7 +154,7 @@ export default {
     async submitReview() {
       try {
         const res = await fetch(
-          `http://localhost:8080/api/reviews/checkUser/${this.userId}/checkProduct/${this.productId}`,
+          `http://localhost:8080/api/reviews/checkUser/${this.userId}/checkProduct/${this.productId}`
         )
         if (!res.ok) throw new Error('Không thể kiểm tra đơn hàng.')
 
@@ -132,13 +182,38 @@ export default {
         alert('Không thể gửi đánh giá. Có thể bạn chưa mua sản phẩm này.')
       }
     },
-    async getOrderDetailId() {
-      const res = await fetch(`/api/orders/user/${this.userId}/product/${this.productId}`)
-      if (!res.ok) throw new Error('Không tìm thấy đơn hàng')
-      const data = await res.json()
-      return data.orderDetailId
+
+    formatDate(dateString) {
+      const date = new Date(dateString)
+      return date.toLocaleString('vi-VN', {
+        hour: '2-digit',
+        minute: '2-digit',
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+      })
+    },
+
+    toggleReview(index) {
+      this.reviews[index].isExpanded = !this.reviews[index].isExpanded
     },
   },
 }
 </script>
-<style src="./src/assets/css/review.css"></style>
+
+<style scoped>
+.rating-stars .star {
+  font-size: 1.4rem;
+  margin-right: 3px;
+  transition: color 0.3s ease;
+}
+
+button {
+  cursor: pointer;
+  color: #007bff;
+}
+
+/* button:hover {
+  text-decoration: underline;
+} */
+</style>
