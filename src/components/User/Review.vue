@@ -17,46 +17,6 @@
       </div>
     </div>
 
-    <!-- Form đánh giá -->
-    <div class="card mb-5" v-if="canReview">
-      <div class="card-header bg-primary text-white">Gửi đánh giá của bạn</div>
-      <div class="card-body">
-        <form @submit.prevent="submitReview">
-          <div class="mb-5">
-            <!-- Star Rating Interactive -->
-            <div class="rating-stars text-center mb-4">
-              <span
-                v-for="star in 5"
-                :key="star"
-                class="star"
-                :class="{ hovered: star <= hoverRating, selected: star <= newReview.rating }"
-                @mouseover="hoverRating = star"
-                @mouseleave="hoverRating = 0"
-                @click="newReview.rating = star"
-              >
-                ★
-              </span>
-            </div>
-          </div>
-
-          <div class="mb-3">
-            <label class="form-label">Nhận xét</label>
-            <textarea
-              v-model="newReview.comment"
-              class="form-control"
-              rows="3"
-              placeholder="Chia sẻ trải nghiệm của bạn..."
-              required
-            ></textarea>
-          </div>
-
-          <div class="text-end">
-            <button type="submit" class="btn btn-success px-4">Gửi</button>
-          </div>
-        </form>
-      </div>
-    </div>
-
     <!-- Danh sách đánh giá -->
     <h5 class="mb-3">Đánh giá gần đây</h5>
 
