@@ -26,6 +26,7 @@ const form = ref({
   images: [],
 })
 
+
 const categories = ref([])
 const errors = ref({})
 
