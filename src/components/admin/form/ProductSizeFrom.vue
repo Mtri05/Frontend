@@ -11,14 +11,27 @@ const allSizes = ref([])
 const selectedSizeIds = ref([])
 const quantities = ref({})
 const productName = ref('')
+const token = localStorage.getItem('token');
 
 const loadSizes = async () => {
-  const res = await axios.get('http://localhost:8080/api/admin/product/size')
+  const res = await axios.get('http://localhost:8080/api/admin/product/size', {
+    headers: {
+    Authorization: `Bearer ${token}`,
+    withCredentials: true 
+  },
+  
+});
+
   allSizes.value = res.data
 }
 
 const loadProductName = async () => {
-  const res = await axios.get(`http://localhost:8080/api/admin/product/${productId}`)
+  const res = await axios.get(`http://localhost:8080/api/admin/product/${productId}`,{
+    headers: {
+              Authorization: `Bearer ${token}`,
+              
+            },
+  })
   productName.value = res.data.name
 }
 
@@ -35,7 +48,12 @@ const submitSizes = async () => {
   }
 
   try {
-    await axios.post('http://localhost:8080/api/admin/product/productSize/add', dataToSend)
+    await axios.post('http://localhost:8080/api/admin/product/productSize/add',dataToSend,{
+      headers: {
+              Authorization: `Bearer ${token}`,
+              
+            },
+    })
     alert('Thêm size thành công!')
     router.push(`/admin/product/sizes?productId=${productId}`)
   } catch (err) {
