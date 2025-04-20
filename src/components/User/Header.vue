@@ -1,31 +1,40 @@
 <script setup>
-import { useRouter } from 'vue-router'
+import axios from 'axios'
 import { ref, onMounted } from 'vue'
-
+import { useRouter } from 'vue-router'
 const router = useRouter()
+
 const isLoggedIn = ref(false)
 
 onMounted(() => {
-  // Kiểm tra xem người dùng đã đăng nhập hay chưa (dựa vào token hoặc cookie)
-  isLoggedIn.value = !!localStorage.getItem('token') || document.cookie.includes('userId=')
+  // Kiểm tra từ localStorage hoặc cookie
+  const token = localStorage.getItem('token')
+  isLoggedIn.value = !!token
 })
 
-const logout = () => {
-  // Xóa token và các thông tin người dùng khỏi localStorage
-  localStorage.removeItem('token')
+const logout = async () => {
+  try {
+        axios.post('http://localhost:8080/api/login/logout', null, {
+      withCredentials: true
+    })
 
-  // Xóa cookie nếu có
-  document.cookie = 'userId=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/'
-  document.cookie = 'userRole=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/'
-  document.cookie = 'userName=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/'
+    // Xoá cookie client
+    document.cookie = "userId=; path=/; max-age=0";
+    document.cookie = "userRole=; path=/; max-age=0";
+    document.cookie = "userName=; path=/; max-age=0";
+    document.cookie = "userEmail=; path=/; max-age=0";
+    document.cookie = "userAvatar=; path=/; max-age=0";
+    document.cookie = "token=; path=/; max-age=0";
 
-  // Đặt lại trạng thái đăng nhập
-  isLoggedIn.value = false
+    // Xóa token và role lưu trong localStorage
+    localStorage.removeItem('token');
+    localStorage.removeItem('role');
 
-  // Điều hướng về trang đăng nhập
-  router.push('/login').then(() => {
-    window.location.reload()
-  })
+    // Chuyển hướng về trang đăng nhập
+    router.push('/login');
+  } catch (error) {
+    console.error('Lỗi khi đăng xuất:', error);
+  }
 }
 </script>
 
@@ -44,12 +53,9 @@ const logout = () => {
           <a href="/contact" class="text-dark text-decoration-none me-3">Tìm cửa hàng</a>
           <a href="/about" class="text-dark text-decoration-none me-3">Giới thiệu</a>
           <!-- Chỉ hiển thị khi đã đăng nhập -->
-          <a v-if="isLoggedIn" @click.prevent="logout" class="text-dark text-decoration-none me-3"
-            >Đăng xuất</a
-          >
+          <a v-if="isLoggedIn" @click.prevent="logout" class="text-dark text-decoration-none me-3">Đăng xuất</a>
+          <router-link v-else to="/login" class="text-dark text-decoration-none me-3">Đăng nhập</router-link>
 
-          <!-- Chỉ hiển thị khi chưa đăng nhập -->
-          <a v-else href="/login" class="text-dark text-decoration-none me-3">Đăng nhập</a>
         </div>
       </div>
     </div>
