@@ -7,7 +7,7 @@ const address = ref({
   customerName: '',
   phone: '',
   address: '',
-  user: { id: null }
+  user: { id: null },
 })
 
 const error = ref(null)
@@ -37,7 +37,7 @@ onMounted(async () => {
 
 // Khi chọn tỉnh
 const onProvinceChange = () => {
-  const province = provinces.value.find(p => p.code == selectedProvince.value)
+  const province = provinces.value.find((p) => p.code == selectedProvince.value)
   districts.value = province?.districts || []
   wards.value = []
   selectedDistrict.value = null
@@ -46,7 +46,7 @@ const onProvinceChange = () => {
 
 // Khi chọn quận/huyện
 const onDistrictChange = () => {
-  const district = districts.value.find(d => d.code == selectedDistrict.value)
+  const district = districts.value.find((d) => d.code == selectedDistrict.value)
   wards.value = district?.wards || []
   selectedWard.value = null
 }
@@ -90,9 +90,9 @@ const saveAddress = async () => {
   }
 
   // Lấy tên từ code
-  const provinceName = provinces.value.find(p => p.code == selectedProvince.value)?.name || ''
-  const districtName = districts.value.find(d => d.code == selectedDistrict.value)?.name || ''
-  const wardName = wards.value.find(w => w.code == selectedWard.value)?.name || ''
+  const provinceName = provinces.value.find((p) => p.code == selectedProvince.value)?.name || ''
+  const districtName = districts.value.find((d) => d.code == selectedDistrict.value)?.name || ''
+  const wardName = wards.value.find((w) => w.code == selectedWard.value)?.name || ''
 
   // Gộp địa chỉ đầy đủ
   address.value.address = `${address.value.address}, ${wardName}, ${districtName}, ${provinceName}`
@@ -101,9 +101,20 @@ const saveAddress = async () => {
   if (userId) {
     address.value.user.id = parseInt(userId)
   }
+  const token = localStorage.getItem('token')
 
   try {
-    const response = await axios.post('http://localhost:8080/api/addresses/create', address.value)
+    const response = await axios.post(
+      'http://localhost:8080/api/user/addresses/create',
+      address.value,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          withCredentials: true,
+        },
+      },
+    )
+
     successMessage.value = 'Địa chỉ đã được thêm thành công.'
     address.value.customerName = ''
     address.value.phone = ''
@@ -116,6 +127,7 @@ const saveAddress = async () => {
   } catch (err) {
     console.error('❌ Lỗi khi thêm địa chỉ:', err)
     error.value = err.response?.data || 'Đã xảy ra lỗi khi thêm địa chỉ.'
+    console.log(err)
   }
 }
 </script>
@@ -127,12 +139,19 @@ const saveAddress = async () => {
         <h2 class="text-center">Thêm Địa Chỉ</h2>
 
         <div v-if="error" class="alert alert-danger text-center">{{ error }}</div>
-        <div v-if="successMessage" class="alert alert-success text-center">{{ successMessage }}</div>
+        <div v-if="successMessage" class="alert alert-success text-center">
+          {{ successMessage }}
+        </div>
 
         <form @submit.prevent="saveAddress">
           <div class="mb-3">
             <label for="customerName" class="form-label">Tên người nhận:</label>
-            <input v-model="address.customerName" type="text" class="form-control" id="customerName" />
+            <input
+              v-model="address.customerName"
+              type="text"
+              class="form-control"
+              id="customerName"
+            />
           </div>
 
           <div class="mb-3">
@@ -189,5 +208,4 @@ const saveAddress = async () => {
   </div>
 </template>
 
-<style scoped>
-</style>
+<style scoped></style>

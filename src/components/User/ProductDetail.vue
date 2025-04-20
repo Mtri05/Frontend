@@ -51,7 +51,6 @@ onMounted(async () => {
   }
 })
 
-
 const addToCart = async () => {
   const userId = getCookie('userId')
   if (!userId) {
@@ -68,12 +67,18 @@ const addToCart = async () => {
   const productSizeId = selectedSize.value.id
   const qty = quantity.value
 
+  const token = localStorage.getItem('token')
+
   try {
-    const res = await axios.post(`http://localhost:8080/api/cart/user/add`, null, {
+    const res = await axios.post(`http://localhost:8080/api/user/cart/add`, null, {
       params: {
         cartId,
         productSizeId,
         quantity: qty,
+      },
+      headers: {
+        Authorization: `Bearer ${token}`,
+        withCredentials: true,
       },
     })
 
@@ -142,6 +147,4 @@ function getCookie(name) {
     </div>
     <Review :productId="product.id" :userId="parseInt(getCookie('userId'))" />
   </div>
-
-
 </template>

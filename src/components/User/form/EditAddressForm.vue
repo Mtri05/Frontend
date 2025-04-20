@@ -11,8 +11,8 @@ const address = ref({
   phone: '',
   address: '',
   user: {
-    id: null
-  }
+    id: null,
+  },
 })
 
 const error = ref(null)
@@ -27,29 +27,28 @@ const getCookie = (name) => {
 
 // Load dữ liệu địa chỉ theo id từ URL
 const loadAddress = async () => {
-  const id = route.params.id;
+  const id = route.params.id
   try {
-    const response = await axios.get(`http://localhost:8080/api/addresses/${id}`);
-    console.log("Address data:", response.data);
+    const response = await axios.get(`http://localhost:8080/api/user/addresses/${id}`)
+    console.log('Address data:', response.data)
 
     // Gán trực tiếp nếu là object, không cần truy cập addresses[0]
-    address.value = response.data;
+    address.value = response.data
   } catch (err) {
-    error.value = 'Không thể tải dữ liệu địa chỉ.';
-    console.error(err);
+    error.value = 'Không thể tải dữ liệu địa chỉ.'
+    console.error(err)
   }
 }
-
 
 const updateAddress = async () => {
   error.value = null
   successMessage.value = null
-  
+
   if (!address.value.customerName || !address.value.phone || !address.value.address) {
     error.value = 'Vui lòng điền đầy đủ thông tin.'
     return
   }
-  
+
   const isTenDigits = /^[0-9]{10}$/.test(address.value.phone)
   if (!isTenDigits) {
     error.value = 'Số điện thoại phải có đúng 10 chữ số.'
@@ -72,7 +71,7 @@ const updateAddress = async () => {
   }
 
   try {
-    await axios.put(`http://localhost:8080/api/addresses/${address.value.id}`, address.value)
+    await axios.put(`http://localhost:8080/api/user/addresses/${address.value.id}`, address.value)
     successMessage.value = 'Cập nhật địa chỉ thành công.'
     setTimeout(() => {
       router.push('/user/address')
@@ -82,7 +81,6 @@ const updateAddress = async () => {
     console.error(err)
   }
 }
-
 
 onMounted(loadAddress)
 </script>

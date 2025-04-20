@@ -1,43 +1,59 @@
-import axios from 'axios';
+import axios from 'axios'
 
-const BASE_URL = 'http://localhost:8080/api/cart';
+const token = localStorage.getItem('token')
+
+const BASE_URL = 'http://localhost:8080/api/user/cart'
 
 const cartAPI = {
   addToCart: (cartId, productSizeId, quantity) => {
-    return axios.post(`${BASE_URL}/user/add`, null, {
+    return axios.post(`${BASE_URL}/add`, null, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        withCredentials: true,
+      },
       params: { cartId, productSizeId, quantity },
-      withCredentials: true,
-    });
+    })
   },
 
   updateQuantity: (cartId, productSizeId, quantity) => {
-    return axios.put(`${BASE_URL}/user/update`, null, {
+    return axios.put(`${BASE_URL}/update`, null, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        withCredentials: true,
+      },
       params: { cartId, productSizeId, quantity },
-      withCredentials: true,
-    });
+    })
   },
 
   deleteItem: (cartId, productSizeId) => {
-    return axios.delete(`${BASE_URL}/user/delete`, {
+    return axios.delete(`${BASE_URL}/delete`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        withCredentials: true,
+      },
       params: { cartId, productSizeId },
-      withCredentials: true,
-    });
+    })
   },
 
   viewCart: (cartId) => {
-    return axios.get(`${BASE_URL}/user/view`, {
+    return axios.get(`${BASE_URL}/view`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        withCredentials: true,
+      },
       params: { cartId },
-      withCredentials: true,
-    });
+    })
   },
 
   clearCart: (cartId) => {
-    return axios.delete(`${BASE_URL}/user/clear`, {
+    return axios.delete(`${BASE_URL}/clear`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        withCredentials: true,
+      },
       params: { cartId },
-      withCredentials: true,
-    });
-  }
-};
+    })
+  },
+}
 
-export default cartAPI;
-
+export default cartAPI

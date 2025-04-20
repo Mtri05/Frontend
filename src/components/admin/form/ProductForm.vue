@@ -1,15 +1,8 @@
 <script setup>
-<<<<<<< HEAD
 import { ref, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import { useRouter } from "vue-router";
 import axios from "axios"
-=======
-import { ref, onMounted } from 'vue'
-import { useRoute } from 'vue-router'
-import { useRouter } from 'vue-router'
-import axios from 'axios'
->>>>>>> f5f87a2ed645585f6b1b82863b80439b36e6440d
 
 const route = useRoute()
 const router = useRouter()
@@ -35,7 +28,7 @@ const loadCategories = async () => {
   const res = await axios.get('http://localhost:8080/api/admin/product/categories',{
     headers: {
     Authorization: `Bearer ${token}`,
-    
+
   },
   })
   categories.value = res.data
@@ -48,7 +41,7 @@ const loadProduct = async () => {
     const res = await axios.get(`http://localhost:8080/api/admin/product/${productId}`,{
       headers: {
     Authorization: `Bearer ${token}`,
-    
+
   },
     })
     const product = res.data
@@ -86,7 +79,7 @@ const handleSubmit = async () => {
   try {
     if (productId) {
       await axios.post(`http://localhost:8080/api/admin/product/update/${productId}`, formData, {
-        headers: { 
+        headers: {
           'Content-Type': 'multipart/form-data' ,
           Authorization: `Bearer ${token}`,
         },
@@ -98,7 +91,7 @@ const handleSubmit = async () => {
         headers: { 'Content-Type': 'multipart/form-data',
         Authorization: `Bearer ${token}`,
          },
-        
+
       })
       alert('Thêm thành công')
       router.push('/admin/product')

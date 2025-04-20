@@ -26,7 +26,7 @@ export default {
 
       // Gọi API để lấy địa chỉ của user dựa trên userId
       axios
-        .get(`http://localhost:8080/api/addresses/user/${userId}`)
+        .get(`http://localhost:8080/api/user/addresses/${userId}`)
         .then((res) => {
           this.addresses = res.data // Cập nhật dữ liệu vào addresses
         })
@@ -39,7 +39,7 @@ export default {
     deleteAddress(id) {
       if (confirm('Bạn có chắc chắn muốn xóa?')) {
         axios
-          .delete(`http://localhost:8080/api/addresses/${id}`)
+          .delete(`http://localhost:8080/api/user/addresses/${id}`)
           .then(() => {
             this.loadAddresses() // Tải lại danh sách địa chỉ sau khi xóa
           })

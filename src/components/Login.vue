@@ -16,17 +16,15 @@ const login = async () => {
     formData.append('password', password.value)
 
     const response = await axios.post('http://localhost:8080/api/login', formData, {
-      headers: { 
-    
-  },
+      headers: {},
       data: formData,
       withCredentials: true,
     })
-    console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" , response);
+    console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', response)
     // Kiểm tra xem response.data.user có tồn tại không
     if (response.data && response.data.user) {
       const user = response.data.user
-      const role = 0 // 0 = admin, 1 = user
+      const role = response.data.user.role // 0 = admin, 1 = user
 
       localStorage.setItem('token', response.data.token)
       localStorage.setItem('role', role)

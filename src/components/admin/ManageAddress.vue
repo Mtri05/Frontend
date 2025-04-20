@@ -7,15 +7,14 @@ const addresses = ref([])
 const route = useRoute()
 const userId = ref(route.query.userId)
 
-const token = localStorage.getItem('token');
+const token = localStorage.getItem('token')
 
 const fetchAddresses = async () => {
   try {
-    const response = await axios.get(`http://localhost:8080/api/addresses/admin/${userId.value}`,{
+    const response = await axios.get(`http://localhost:8080/api/admin/addresses/${userId.value}`, {
       headers: {
-    Authorization: `Bearer ${token}`,
-    
-  },
+        Authorization: `Bearer ${token}`,
+      },
     })
     addresses.value = response.data
     console.log('Danh sách địa chỉ:', addresses.value)
