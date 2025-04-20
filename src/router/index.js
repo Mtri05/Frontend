@@ -182,39 +182,59 @@ const routes = [
 ]
 
 // Gán meta.allowedRoles tự động cho các route có tiền tố
-// routes.forEach((route) => {
-//   if (route.path.startsWith('/admin')) {
-//     route.meta = { allowedRoles: [0] } // chỉ admin (role = 0)
-//   }
-//   if (route.path.startsWith('/user')) {
-//     route.meta = { allowedRoles: [1] } // chỉ user (role = 1)
-//   }
-// })
+routes.forEach((route) => {
+  if (route.path.startsWith('/admin')) {
+    route.meta = { allowedRoles: [0] } // chỉ admin (role = 0)
+  }
+  if (route.path.startsWith('/user')) {
+    route.meta = { allowedRoles: [1] } // chỉ user (role = 1)
+  }
+})
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes,
 })
 
-// Middleware kiểm tra role trước khi vào route
-// router.beforeEach((to, from, next) => {
-//   const allowedRoles = to.meta.allowedRoles
+// Hàm lấy giá trị cookie theo tên
+function getCookie(name) {
+  const value = `; ${document.cookie}`
+  const parts = value.split(`; ${name}=`)
+  if (parts.length === 2) return parts.pop().split(';').shift()
+  return null
+}
 
-//   if (!allowedRoles) {
-//     return next()
-//   }
+router.beforeEach((to, from, next) => {
+  const allowedRoles = to.meta.allowedRoles
+  const role = parseInt(getCookie('userRole'))
 
-//   const role = parseInt(localStorage.getItem('role'))
+  // Nếu route KHÔNG yêu cầu quyền truy cập => ai cũng vào được
+  if (!allowedRoles) {
+    return next()
+  }
 
-//   if (isNaN(role)) {
-//     return next('/login')
-//   }
+  // Nếu là Admin (role = 0) => được vào tất cả các trang
+  if (role === 0) {
+    return next()
+  }
 
-//   if (!allowedRoles.includes(role)) {
-//     return next('/login')
-//   }
+  // Nếu là User (role = 1) => chỉ được vào các trang cho phép role = 1
+  if (role === 1 && allowedRoles.includes(1)) {
+    return next()
+  }
 
-//   next()
-// })
+  // Nếu chưa đăng nhập => chỉ cho phép vào các route KHÔNG có /admin hoặc /user
+  if (isNaN(role)) {
+    if (to.path.startsWith('/admin') || to.path.startsWith('/user')) {
+      return next('/login')
+    }
+    return next() 
+  }
+
+  // Mọi trường hợp không hợp lệ khác => redirect về login
+  return next('/login')
+})
+
+
 
 export default router

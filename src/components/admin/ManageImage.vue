@@ -9,7 +9,7 @@ const productId = Number(route.query.productId)
 const imageList = ref([])
 const token = localStorage.getItem('token');
 
-// Load ảnh sản phẩm từ API
+
 const loadImagesByProduct = async () => {
   try {
     if (!productId) return
@@ -28,9 +28,9 @@ const deleteImage = async (id) => {
   if (!confirm('Bạn có chắc muốn xóa ảnh này?')) return
   try {
     const formData = new FormData()
-    formData.append('id', id) // Append ảnh cần xóa vào FormData
+    formData.append('id', id) 
 
-    // Gửi yêu cầu DELETE
+    
     const res = await axios.post(`http://localhost:8080/api/admin/product/image/delete`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
@@ -39,7 +39,7 @@ const deleteImage = async (id) => {
       
     })
 
-    // Cập nhật danh sách ảnh sau khi xóa
+    
     imageList.value = imageList.value.filter((img) => img.id !== id)
   } catch (err) {
     console.error('Lỗi khi xóa ảnh:', err.response?.data || err.message)
@@ -47,7 +47,7 @@ const deleteImage = async (id) => {
   }
 }
 
-// Gọi hàm loadImagesByProduct khi component được mount
+
 onMounted(() => {
   loadImagesByProduct()
 })
@@ -58,13 +58,13 @@ onMounted(() => {
     <div class="form-container shadow p-4 rounded bg-light">
       <h5 class="text-center mb-4">Danh sách ảnh sản phẩm</h5>
 
-      <!-- Nút quay lại và thêm ảnh -->
+
       <div class="d-flex justify-content-between mb-3">
         <a href="/admin/product" class="btn btn-secondary">Quay lại</a>
         <button class="btn btn-primary" @click="handleAddImage">Thêm ảnh</button>
       </div>
 
-      <!-- Bảng hiển thị ảnh sản phẩm -->
+
       <div v-if="imageList.length" class="mb-4">
         <label class="form-label fw-semibold">Danh sách ảnh</label>
         <table class="table table-bordered table-hover">
@@ -96,7 +96,7 @@ onMounted(() => {
         </table>
       </div>
 
-      <!-- Thông báo nếu không có ảnh -->
+
       <div v-else>
         <p class="text-danger">Không có ảnh sản phẩm nào.</p>
       </div>

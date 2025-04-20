@@ -75,7 +75,6 @@ onMounted(() => {
     </h3>
     <hr />
 
-    <!-- Select chọn nhiều size -->
     <div class="mb-3">
       <label for="sizeSelect" class="form-label">Chọn size:</label>
       <select id="sizeSelect" class="form-select" multiple v-model="selectedSizeIds">
@@ -85,7 +84,6 @@ onMounted(() => {
       </select>
     </div>
 
-    <!-- Nhập số lượng cho từng size được chọn -->
     <div class="row">
       <div class="col-md-4 mb-3" v-for="sizeId in selectedSizeIds" :key="sizeId">
         <label class="form-label">

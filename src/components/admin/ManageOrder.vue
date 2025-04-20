@@ -41,6 +41,27 @@ const updateStatus = async (item) => {
     alert('Cập nhật thất bại!')
   }
 }
+// mau cho trang thai
+const getStatusClass = (status) => {
+  switch (status) {
+    case 0:
+      return 'text-secondary' 
+    case 1:
+      return 'text-primary'   
+    case 2:
+      return 'text-warning'   
+    case 3:
+      return 'text-success'   
+    case 4:
+      return 'text-danger'   
+    default:
+      return ''
+  }
+}
+
+
+
+
 const formatAddress = (address) => {
   if (!address) return ''
   const parts = address.split(',')
@@ -82,7 +103,13 @@ const formatAddress = (address) => {
             <td>{{ item.customerName }}</td>
             <td>{{ item.phone }}</td>
             <td>
-              <select v-model="item.status" @change="updateStatus(item)">
+              <select
+                v-model="item.status"
+                @change="updateStatus(item)"
+                class="form-select"
+                :class="`select-status-${item.status}`"
+              >
+
                 <option :value="0">Chưa duyệt</option>
                 <option :value="1">Đã duyệt</option>
                 <option :value="2">Đang giao</option>
@@ -117,5 +144,22 @@ const formatAddress = (address) => {
   #orderTable th {
     font-size: 14px;
   }
+}
+.select-status-0 {
+  background-color: #dee2e6; 
+}
+
+.select-status-1 {
+  background-color: #cfe2ff; 
+}
+
+.select-status-2 {
+  background-color: #fff3cd; 
+}
+.select-status-3 {
+  background-color: #d1e7dd; 
+}
+.select-status-4 {
+  background-color: #f8d7da; 
 }
 </style>

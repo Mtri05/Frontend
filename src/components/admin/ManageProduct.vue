@@ -31,7 +31,7 @@ const loadProducts = async () => {
     })
     products.value = response.data
 
-    await nextTick() // đảm bảo Vue render xong DOM
+    await nextTick() 
     initDataTable()
   } catch (error) {
     console.error('Lỗi khi tải sản phẩm:', error)

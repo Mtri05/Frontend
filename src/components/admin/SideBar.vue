@@ -1,4 +1,43 @@
-<script></script>
+<script setup>
+import axios from 'axios'
+import { ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
+const router = useRouter()
+
+const isLoggedIn = ref(false)
+
+onMounted(() => {
+  // Kiểm tra từ localStorage hoặc cookie
+  const token = localStorage.getItem('token')
+  isLoggedIn.value = !!token
+})
+
+const logout = async () => {
+  try {
+        axios.post('http://localhost:8080/api/login/logout', null, {
+      withCredentials: true
+    })
+
+    // Xoá cookie client
+    document.cookie = "userId=; path=/; max-age=0";
+    document.cookie = "userRole=; path=/; max-age=0";
+    document.cookie = "userName=; path=/; max-age=0";
+    document.cookie = "userEmail=; path=/; max-age=0";
+    document.cookie = "userAvatar=; path=/; max-age=0";
+    document.cookie = "token=; path=/; max-age=0";
+
+    // Xóa token và role lưu trong localStorage
+    localStorage.removeItem('token');
+    localStorage.removeItem('role');
+
+    // Chuyển hướng về trang đăng nhập
+    router.push('/login');
+  } catch (error) {
+    console.error('Lỗi khi đăng xuất:', error);
+  }
+}
+</script>
+
 <template>
   <header>
     <nav class="sidebar">
@@ -42,7 +81,7 @@
           <li><a class="dropdown-item" href="#">Cài đặt</a></li>
           <li><a class="dropdown-item" href="#">Hồ sơ</a></li>
           <li><hr class="dropdown-divider" /></li>
-          <li><a class="dropdown-item" href="/login">Đăng xuất</a></li>
+          <li><a @click.prevent="logout" class="dropdown-item" href="/login">Đăng xuất</a></li>
         </ul>
       </div>
     </nav>

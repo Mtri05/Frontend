@@ -35,7 +35,12 @@ export default {
               
             },
           }),
-          axios.get('http://localhost:8080/api/category/list'),
+          axios.get('http://localhost:8080/api/admin/category/list',{
+            headers: {
+              Authorization: `Bearer ${token}`,
+              
+            },
+          }),
         ])
 
         const orders = orderRes.data

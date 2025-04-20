@@ -23,7 +23,7 @@ const form = ref({
 const categories = ref([])
 const errors = ref({})
 
-// Load all categories
+
 const loadCategories = async () => {
   const res = await axios.get('http://localhost:8080/api/admin/product/categories',{
     headers: {
@@ -34,7 +34,7 @@ const loadCategories = async () => {
   categories.value = res.data
 }
 
-// Load product details if editing
+
 const loadProduct = async () => {
   if (!productId) return
   try {
@@ -133,7 +133,7 @@ const handleSubmit = async () => {
           <div class="text-danger">{{ errors.name }}</div>
         </div>
 
-        <!-- Mô tả -->
+
         <div class="mb-3">
           <label class="form-label fw-semibold">Mô tả</label>
           <textarea
@@ -145,7 +145,7 @@ const handleSubmit = async () => {
           <div class="text-danger">{{ errors.description }}</div>
         </div>
 
-        <!-- Giá -->
+
         <div class="mb-3">
           <label class="form-label fw-semibold">Giá</label>
           <input
@@ -157,7 +157,7 @@ const handleSubmit = async () => {
           <div class="text-danger">{{ errors.price }}</div>
         </div>
 
-        <!-- Danh mục -->
+
         <div class="mb-3">
           <label class="form-label fw-semibold">Danh mục</label>
           <select v-model="form.categoryId" class="form-select">
@@ -169,7 +169,7 @@ const handleSubmit = async () => {
           <div class="text-danger">{{ errors.categoryId }}</div>
         </div>
 
-        <!-- Trạng thái -->
+
         <div class="mb-3">
           <label for="status" class="form-label fw-semibold">Trạng thái</label>
           <select v-model="form.status" class="form-select" id="status" name="status">
@@ -178,7 +178,7 @@ const handleSubmit = async () => {
           </select>
         </div>
 
-        <!-- Hình ảnh -->
+
         <div class="mb-3">
           <label class="form-label fw-semibold">Hình ảnh</label>
           <input
@@ -191,7 +191,7 @@ const handleSubmit = async () => {
           <div class="text-danger">{{ errors.images }}</div>
         </div>
 
-        <!-- Nút hành động -->
+
         <div class="mb-2">
           <button type="submit" class="btn btn-primary me-2">
             {{ productId ? 'Sửa sản phẩm' : 'Thêm sản phẩm' }}
