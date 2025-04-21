@@ -7,9 +7,9 @@ const router = useRouter()
 const route = useRoute()
 
 onMounted(() => {
-  const emailFromQuery = route.query.email
-  if (emailFromQuery) {
-    form.value.email = emailFromQuery
+  const emailFromState = history.state?.email
+  if (emailFromState) {
+    form.value.email = emailFromState
   }
 })
 
