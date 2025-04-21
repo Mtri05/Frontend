@@ -48,8 +48,9 @@ const login = async () => {
     }
   } catch (err) {
     // Log chi tiết lỗi để dễ dàng xem
-    console.log('Error during login:', response.data)
-    error.value = err.response?.data || 'Lỗi hệ thống'
+    console.log('Error during login:', err)
+    error.value = err.response?.data?.message || 'Email hoặc mật khẩu không đúng'
+
   }
 }
 </script>
