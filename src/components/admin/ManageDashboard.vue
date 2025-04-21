@@ -1,8 +1,10 @@
 <script>
 import { Chart } from 'chart.js/auto'
 import axios from 'axios'
+import { watch } from 'vue'
+import { useRoute } from 'vue-router'
 
-const token = localStorage.getItem('token');
+const token = localStorage.getItem('token')
 export default {
   data() {
     return {
@@ -11,34 +13,31 @@ export default {
       productCount: 0,
       categoryCount: 0,
       totalRevenue: 0,
+      route: useRoute(),
     }
   },
   methods: {
     async loadStats() {
       try {
         const [orderRes, userRes, productRes, categoryRes] = await Promise.all([
-          axios.get('http://localhost:8080/api/admin/order',{
+          axios.get('http://localhost:8080/api/admin/order', {
             headers: {
               Authorization: `Bearer ${token}`,
-              
             },
           }),
-          axios.get('http://localhost:8080/api/admin/users',{
-            headers: {
-            Authorization: `Bearer ${token}`,
-            
-          },
-          }),
-          axios.get('http://localhost:8080/api/admin/product/products',{
+          axios.get('http://localhost:8080/api/admin/users', {
             headers: {
               Authorization: `Bearer ${token}`,
-              
             },
           }),
-          axios.get('http://localhost:8080/api/admin/category/list',{
+          axios.get('http://localhost:8080/api/admin/product/products', {
             headers: {
               Authorization: `Bearer ${token}`,
-              
+            },
+          }),
+          axios.get('http://localhost:8080/api/admin/category/list', {
+            headers: {
+              Authorization: `Bearer ${token}`,
             },
           }),
         ])
@@ -140,6 +139,12 @@ export default {
   },
   mounted() {
     this.loadStats()
+    watch(
+      () => this.route.fullPath,
+      () => {
+        this.loadStats()
+      },
+    )
   },
 }
 </script>

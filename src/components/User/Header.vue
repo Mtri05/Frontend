@@ -14,26 +14,27 @@ onMounted(() => {
 
 const logout = async () => {
   try {
-        axios.post('http://localhost:8080/api/login/logout', null, {
-      withCredentials: true
+    axios.post('http://localhost:8080/api/login/logout', null, {
+      withCredentials: true,
     })
 
     // Xoá cookie client
-    document.cookie = "userId=; path=/; max-age=0";
-    document.cookie = "userRole=; path=/; max-age=0";
-    document.cookie = "userName=; path=/; max-age=0";
-    document.cookie = "userEmail=; path=/; max-age=0";
-    document.cookie = "userAvatar=; path=/; max-age=0";
-    document.cookie = "token=; path=/; max-age=0";
+    document.cookie = 'userId=; path=/; max-age=0'
+    document.cookie = 'userRole=; path=/; max-age=0'
+    document.cookie = 'userName=; path=/; max-age=0'
+    document.cookie = 'userEmail=; path=/; max-age=0'
+    document.cookie = 'userAvatar=; path=/; max-age=0'
+    document.cookie = 'token=; path=/; max-age=0'
 
     // Xóa token và role lưu trong localStorage
-    localStorage.removeItem('token');
-    localStorage.removeItem('role');
+    localStorage.removeItem('token')
+    localStorage.removeItem('role')
+    localStorage.removeItem('userId')
 
     // Chuyển hướng về trang đăng nhập
-    router.push('/login');
+    router.push('/login')
   } catch (error) {
-    console.error('Lỗi khi đăng xuất:', error);
+    console.error('Lỗi khi đăng xuất:', error)
   }
 }
 </script>
@@ -53,9 +54,12 @@ const logout = async () => {
           <a href="/contact" class="text-dark text-decoration-none me-3">Tìm cửa hàng</a>
           <a href="/about" class="text-dark text-decoration-none me-3">Giới thiệu</a>
           <!-- Chỉ hiển thị khi đã đăng nhập -->
-          <a v-if="isLoggedIn" @click.prevent="logout" class="text-dark text-decoration-none me-3">Đăng xuất</a>
-          <router-link v-else to="/login" class="text-dark text-decoration-none me-3">Đăng nhập</router-link>
-
+          <a v-if="isLoggedIn" @click.prevent="logout" class="text-dark text-decoration-none me-3"
+            >Đăng xuất</a
+          >
+          <router-link v-else to="/login" class="text-dark text-decoration-none me-3"
+            >Đăng nhập</router-link
+          >
         </div>
       </div>
     </div>
