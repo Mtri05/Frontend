@@ -34,6 +34,17 @@ onMounted(async () => {
     loading.value = false
   }
 })
+
+const formatDateVN = (dateString) => {
+  const date = new Date(dateString)
+  return date.toLocaleString('vi-VN', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  })
+}
 </script>
 
 <template>
@@ -44,7 +55,7 @@ onMounted(async () => {
       <h5>Thông tin đơn hàng</h5>
       <p><strong>ID Đơn Hàng:</strong> {{ orderDetail.orderId }}</p>
       <p><strong>Khách Hàng:</strong> {{ orderDetail.fullName }}</p>
-      <p><strong>Ngày Tạo:</strong> {{ new Date(orderDetail.orderDate).toLocaleString() }}</p>
+      <p><strong>Ngày Tạo:</strong>  {{formatDateVN(orderDetail.orderDate) }} </p>
       <p><strong>Địa chỉ:</strong> {{ orderDetail.address }}</p>
       <p>
         <strong>Trạng Thái:</strong>

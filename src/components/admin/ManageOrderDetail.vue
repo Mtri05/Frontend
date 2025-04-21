@@ -8,16 +8,35 @@ const orderId = ref(route.query.orderId)
 const orderDetail = ref({})
 const loading = ref(true)
 
+
+const token = localStorage.getItem('token');
+
 const formatPrice = (value) => {
   return new Intl.NumberFormat('vi-VN', {
     style: 'decimal',
   }).format(value) + ' VND'
 }
 
+const formatDateVN = (dateString) => {
+  const date = new Date(dateString)
+  return date.toLocaleString('vi-VN', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  })
+}
+
 
 onMounted(async () => {
   try {
-    const res = await axios.get(`http://localhost:8080/api/order/detail?orderId=${orderId.value}`)
+    const res = await axios.get(`http://localhost:8080/api/admin/order/detail?orderId=${orderId.value}`,{
+      headers: {
+        Authorization: `Bearer ${token}`,
+        withCredentials: true 
+      },
+    })
     console.log('Order detail response:', res.data) // Log dữ liệu để kiểm tra
     orderDetail.value = res.data
   } catch (error) {
@@ -36,7 +55,7 @@ onMounted(async () => {
       <h5>Thông tin đơn hàng</h5>
       <p><strong>ID Đơn Hàng:</strong> {{ orderDetail.orderId }}</p>
       <p><strong>Khách Hàng:</strong> {{ orderDetail.fullName }}</p>
-      <p><strong>Ngày Tạo:</strong> {{ orderDetail.orderDate }}</p>
+      <p><strong>Ngày Tạo:</strong> {{formatDateVN(orderDetail.orderDate) }}</p>
       <p><strong>Địa chỉ:</strong> {{ orderDetail.address }}</p>
       <p>
         <strong>Trạng Thái:</strong>

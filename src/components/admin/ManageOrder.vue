@@ -22,6 +22,20 @@ onMounted(async () => {
   }
 })
 
+
+const formatDateVN = (dateString) => {
+  const date = new Date(dateString)
+  return date.toLocaleString('vi-VN', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  })
+}
+
+
+
 const updateStatus = async (item) => {
   try {
     await axios.post(`http://localhost:8080/api/admin/order/update-status/${item.orderId}`,
@@ -117,12 +131,12 @@ const formatAddress = (address) => {
                 <option :value="4">Hủy đơn</option>
               </select>
             </td>
-            <td>{{ item.orderDate }}</td>
+            <td>{{ formatDateVN(item.orderDate) }}</td>
             <td>{{ item.totalAmount.toLocaleString() }} VND</td>
             <td>{{ formatAddress(item.address) }}</td>
             <td>
               <a
-                :href="`/admin/admin/order/detail?orderId=${item.orderId}`"
+                :href="`/admin/order/detail?orderId=${item.orderId}`"
                 class="btn btn-primary btn-sm"
                 >Chi tiết</a
               >
