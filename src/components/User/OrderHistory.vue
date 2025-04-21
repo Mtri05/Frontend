@@ -1,7 +1,7 @@
 <script>
 import axios from 'axios'
 
-const token = localStorage.getItem('token');
+const token = localStorage.getItem('token')
 export default {
   data() {
     return {
@@ -11,89 +11,88 @@ export default {
   methods: {
     // Lấy userId từ cookie
     getCookie(name) {
-      const value = `; ${document.cookie}`;
-      const parts = value.split(`; ${name}=`);
-      if (parts.length === 2) return parts.pop().split(';').shift();
-      return null;
+      const value = `; ${document.cookie}`
+      const parts = value.split(`; ${name}=`)
+      if (parts.length === 2) return parts.pop().split(';').shift()
+      return null
     },
 
     // Lấy danh sách đơn hàng từ server
     loadOrders() {
-      const userId = this.getCookie('userId');
+      const userId = this.getCookie('userId')
       if (!userId) {
-        alert('Bạn chưa đăng nhập!');
-        return;
+        alert('Bạn chưa đăng nhập!')
+        return
       }
 
       axios
-        .get('http://localhost:8080/api/user/order/list', {
+        .get(`http://localhost:8080/api/user/order/list?userId=${userId}`, {
           headers: {
             Authorization: `Bearer ${token}`,
-            
           },
-          withCredentials: true,
+          // withCredentials: true,
         })
+
         .then((res) => {
-          this.orders = res.data;
+          this.orders = res.data
         })
         .catch((err) => {
-          console.error('Lỗi khi lấy đơn hàng:', err);
-        });
+          console.error('Lỗi khi lấy đơn hàng:', err)
+        })
     },
 
     formatCurrency(amount) {
-      return new Intl.NumberFormat('vi-VN').format(amount) + ' VND';
+      return new Intl.NumberFormat('vi-VN').format(amount) + ' VND'
     },
 
     formatDate(dateStr) {
-      const date = new Date(dateStr);
-      return date.toLocaleString('vi-VN');
+      const date = new Date(dateStr)
+      return date.toLocaleString('vi-VN')
     },
 
     getStatusText(status) {
       switch (status) {
         case 0:
-          return { text: 'Chưa duyệt', class: 'text-warning' };
+          return { text: 'Chưa duyệt', class: 'text-warning' }
         case 1:
-          return { text: 'Đã duyệt', class: 'text-primary' };
+          return { text: 'Đã duyệt', class: 'text-primary' }
         case 2:
-          return { text: 'Đang giao', class: 'text-info' };
+          return { text: 'Đang giao', class: 'text-info' }
         case 3:
-          return { text: 'Giao thành công', class: 'text-success' };
+          return { text: 'Giao thành công', class: 'text-success' }
         case 4:
-          return { text: 'Đã hủy', class: 'text-danger' };
+          return { text: 'Đã hủy', class: 'text-danger' }
         default:
-          return { text: 'Không xác định', class: 'text-secondary' };
+          return { text: 'Không xác định', class: 'text-secondary' }
       }
     },
 
     confirmCancel(orderId) {
       if (confirm('Bạn có chắc muốn hủy đơn hàng này không?')) {
         axios
-          .post(`http://localhost:8080/api/user/order/update-status/${orderId}`, 
-          {
-            status: 4,
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            
+          .post(
+            `http://localhost:8080/api/user/order/update-status/${orderId}`,
+            {
+              status: 4,
             },
-          }
-          
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            },
           )
           .then(() => {
-            this.loadOrders();
+            this.loadOrders()
           })
           .catch((err) => {
-            console.error('Lỗi khi hủy đơn hàng:', err);
-          });
+            console.error('Lỗi khi hủy đơn hàng:', err)
+          })
       }
     },
   },
 
   mounted() {
-    this.loadOrders();
+    this.loadOrders()
   },
 }
 </script>
@@ -120,7 +119,9 @@ export default {
             {{ getStatusText(order.status).text }}
           </td>
           <td>
-            <a :href="`/user/order/details?orderId=${order.orderId}`" class="btn btn-primary btn-sm">Xem</a>
+            <a :href="`/user/order/details?orderId=${order.orderId}`" class="btn btn-primary btn-sm"
+              >Xem</a
+            >
             <button
               v-if="order.status === 0"
               @click="confirmCancel(order.orderId)"

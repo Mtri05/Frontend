@@ -9,7 +9,7 @@ const cartAPI = {
     return axios.post(`${BASE_URL}/add`, null, {
       headers: {
         Authorization: `Bearer ${token}`,
-        withCredentials: true,
+        // withCredentials: true,
       },
       params: { cartId, productSizeId, quantity },
     })
@@ -19,7 +19,7 @@ const cartAPI = {
     return axios.put(`${BASE_URL}/update`, null, {
       headers: {
         Authorization: `Bearer ${token}`,
-        withCredentials: true,
+        // withCredentials: true,
       },
       params: { cartId, productSizeId, quantity },
     })
@@ -29,7 +29,7 @@ const cartAPI = {
     return axios.delete(`${BASE_URL}/delete`, {
       headers: {
         Authorization: `Bearer ${token}`,
-        withCredentials: true,
+        // withCredentials: true,
       },
       params: { cartId, productSizeId },
     })
@@ -39,7 +39,7 @@ const cartAPI = {
     return axios.get(`${BASE_URL}/view`, {
       headers: {
         Authorization: `Bearer ${token}`,
-        withCredentials: true,
+        // withCredentials: true,
       },
       params: { cartId },
     })
@@ -49,7 +49,7 @@ const cartAPI = {
     return axios.delete(`${BASE_URL}/clear`, {
       headers: {
         Authorization: `Bearer ${token}`,
-        withCredentials: true,
+        // withCredentials: true,
       },
       params: { cartId },
     })
