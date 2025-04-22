@@ -64,15 +64,14 @@ async function clearCart() {
     console.error('Lỗi xoá toàn bộ:', error)
   }
 }
-const token = localStorage.getItem('token');
+const token = localStorage.getItem('token')
 // Gọi API lấy địa chỉ của người dùng
 async function fetchAddresses() {
   try {
-    const response = await axios.get(`http://localhost:8080/api/user/addresses/${cartId}`,{
+    const response = await axios.get(`http://localhost:8080/api/user/addresses/${cartId}`, {
       headers: {
-    Authorization: `Bearer ${token}`,
-    
-  },
+        Authorization: `Bearer ${token}`,
+      },
     })
     addresses.value = response.data
 
@@ -106,19 +105,22 @@ async function placeOrder() {
 
   isPlacingOrder.value = true
   try {
-    const response = await axios.post(`http://localhost:8080/api/user/order/checkout`, {
-      
-      userId: cartId,
-      address: `${selectedAddress.address}, ${selectedAddress.customerName}, ${selectedAddress.phone}`,
-      items: filteredCart.value.map((item) => ({
-        productSizeId: item.productSize.id,
-        quantity: item.quantity,
-      })),}, {
-        headers: {
-        Authorization: `Bearer ${token}`,
-        
+    const response = await axios.post(
+      `http://localhost:8080/api/user/order/checkout`,
+      {
+        userId: cartId,
+        address: `${selectedAddress.address}, ${selectedAddress.customerName}, ${selectedAddress.phone}`,
+        items: filteredCart.value.map((item) => ({
+          productSizeId: item.productSize.id,
+          quantity: item.quantity,
+        })),
       },
-      })
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    )
 
     alert('Đặt hàng thành công!')
     showAddressList.value = false
@@ -130,6 +132,21 @@ async function placeOrder() {
   } finally {
     isPlacingOrder.value = false
   }
+}
+function validateAndUpdateQuantity(item) {
+  if (item.quantity < 1) {
+    alert('Số lượng tối thiểu là 1!')
+    item.quantity = 1
+    return
+  }
+
+  if (item.quantity > item.productSize.stock) {
+    alert(`Chỉ còn ${item.productSize.stock} sản phẩm trong kho!`)
+    item.quantity = item.productSize.stock
+    return
+  }
+
+  updateQuantity(item)
 }
 
 onMounted(() => {
@@ -175,7 +192,7 @@ t>
                 :max="item.productSize.stock"
                 class="cart-qty-input-modern"
                 v-model.number="item.quantity"
-                @change="updateQuantity(item)"
+                @change="validateAndUpdateQuantity(item)"
               />
             </td>
             <td class="cart-price-highlight-modern">

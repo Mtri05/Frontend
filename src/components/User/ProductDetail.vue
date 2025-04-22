@@ -51,6 +51,8 @@ const changeQuantity = (delta) => {
   const newQuantity = quantity.value + delta
   if (newQuantity >= 1) {
     quantity.value = newQuantity
+  } else {
+    alert('Số lượng phải lớn hơn 0.')
   }
 }
 
@@ -87,10 +89,22 @@ const addToCart = async () => {
     return
   }
 
+  // 👉 Kiểm tra số lượng yêu cầu so với số lượng còn lại trong kho
+  if (quantity.value > selectedSize.value.stock) {
+    alert(
+      `Số lượng bạn chọn vượt quá số lượng còn lại trong kho. Chỉ còn ${selectedSize.value.stock} sản phẩm.`,
+    )
+    return
+  }
+
+  if (quantity.value <= 0) {
+    alert(`số lượng phải từ 1`)
+    return
+  }
+
   const cartId = userId // vì cartId = userId
   const productSizeId = selectedSize.value.id
   const qty = quantity.value
-
   const token = localStorage.getItem('token')
 
   try {
@@ -102,7 +116,6 @@ const addToCart = async () => {
       },
       headers: {
         Authorization: `Bearer ${token}`,
-        // withCredentials: true,
       },
     })
 
@@ -155,7 +168,13 @@ function getCookie(name) {
             <button type="button" class="btn btn-outline-dark fw-bold" @click="changeQuantity(-1)">
               -
             </button>
-            <input type="number" v-model="quantity" class="form-control text-center" min="1" />
+            <input
+              type="number"
+              v-model="quantity"
+              class="form-control text-center"
+              min="1"
+              :max="selectedSize?.stock || 1"
+            />
             <button type="button" class="btn btn-outline-dark fw-bold" @click="changeQuantity(1)">
               +
             </button>
@@ -172,9 +191,7 @@ function getCookie(name) {
         <div v-if="totalReviews > 0" class="mb-3">
           <h6>
             ⭐ Đánh giá trung bình:
-            <span class="text-warning fw-bold">{{ averageRating }}</span> / 5 ({{
-              totalReviews
-            }}
+            <span class="text-warning fw-bold">{{ averageRating }}</span> / 5 ({{ totalReviews }}
             lượt đánh giá)
           </h6>
           <div>
