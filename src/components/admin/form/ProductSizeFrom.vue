@@ -11,26 +11,23 @@ const allSizes = ref([])
 const selectedSizeIds = ref([])
 const quantities = ref({})
 const productName = ref('')
-const token = localStorage.getItem('token');
+const token = localStorage.getItem('token')
 
 const loadSizes = async () => {
   const res = await axios.get('http://localhost:8080/api/admin/product/size', {
     headers: {
-    Authorization: `Bearer ${token}`,
-    withCredentials: true 
-  },
-  
-});
+      Authorization: `Bearer ${token}`,
+    },
+  })
 
   allSizes.value = res.data
 }
 
 const loadProductName = async () => {
-  const res = await axios.get(`http://localhost:8080/api/admin/product/${productId}`,{
+  const res = await axios.get(`http://localhost:8080/api/admin/product/${productId}`, {
     headers: {
-              Authorization: `Bearer ${token}`,
-              
-            },
+      Authorization: `Bearer ${token}`,
+    },
   })
   productName.value = res.data.name
 }
@@ -48,11 +45,10 @@ const submitSizes = async () => {
   }
 
   try {
-    await axios.post('http://localhost:8080/api/admin/product/productSize/add',dataToSend,{
+    await axios.post('http://localhost:8080/api/admin/product/productSize/add', dataToSend, {
       headers: {
-              Authorization: `Bearer ${token}`,
-              
-            },
+        Authorization: `Bearer ${token}`,
+      },
     })
     alert('Thêm size thành công!')
     router.push(`/admin/product/sizes?productId=${productId}`)
@@ -60,6 +56,13 @@ const submitSizes = async () => {
     console.error('Lỗi khi thêm size:', err)
     alert('Thêm size thất bại!')
   }
+}
+
+const removeSize = (sizeId) => {
+  // Xoá sizeId khỏi selectedSizeIds
+  selectedSizeIds.value = selectedSizeIds.value.filter((id) => id !== sizeId)
+  // Xoá số lượng tương ứng trong quantities
+  delete quantities.value[sizeId]
 }
 
 onMounted(() => {
@@ -85,18 +88,27 @@ onMounted(() => {
     </div>
 
     <div class="row">
-      <div class="col-md-4 mb-3" v-for="sizeId in selectedSizeIds" :key="sizeId">
-        <label class="form-label">
-          Nhập số lượng cho size:
-          <strong>{{ allSizes.find((s) => s.id === sizeId)?.name }}</strong>
-        </label>
-        <input
-          type="number"
-          class="form-control"
-          v-model="quantities[sizeId]"
-          min="0"
-          placeholder="Số lượng tồn"
-        />
+      <div class="col-md-4 mb-3 d-flex align-items-end" v-for="sizeId in selectedSizeIds" :key="sizeId">
+        <div class="w-100">
+          <label class="form-label">
+            Nhập số lượng cho size:
+            <strong>{{ allSizes.find((s) => s.id === sizeId)?.name }}</strong>
+          </label>
+          <input
+            type="number"
+            class="form-control"
+            v-model="quantities[sizeId]"
+            min="0"
+            placeholder="Số lượng tồn"
+          />
+        </div>
+        <button
+          class="btn btn-danger ms-2 mb-2"
+          @click="removeSize(sizeId)"
+          title="Xoá size này"
+        >
+          ✕
+        </button>
       </div>
     </div>
 
