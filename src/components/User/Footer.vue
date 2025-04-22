@@ -6,9 +6,9 @@
       <div class="row">
         <!-- Thông tin công ty -->
         <div class="col-md-4">
-          <h2 class="company-logo">Minn Nhựt</h2>
+          <h2 class="company-logo">Fpoly Shop</h2>
           <p class="company-description">
-            Minn Nhựt chuyên cung cấp thời trang authentic từ các thương hiệu cao cấp như Nike, Adidas, Gucci,...
+            Fpoly Shop chuyên cung cấp thời trang authentic từ các thương hiệu cao cấp như Nike, Adidas, Gucci,...
             Cam kết chất lượng, dịch vụ tận tâm và cập nhật xu hướng mới nhất, mang đến trải nghiệm mua sắm đáng tin cậy cho khách hàng.
           </p>
           <ul class="footer-list d-flex">
@@ -28,7 +28,7 @@
               <a href="#" class="footer-list-link"><i class="bi bi-youtube"></i></a>
             </li>
           </ul>
-          <span class="copyright">2023 Nike. Tất cả quyền được bảo lưu.</span>
+          <span class="copyright">2023 Fpoly Shop. Tất cả quyền được bảo lưu.</span>
         </div>
 
         <!-- Về Chúng Tôi -->
