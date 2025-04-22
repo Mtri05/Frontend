@@ -16,6 +16,14 @@ const fetchReviews = async () => {
     console.log(err)
   }
 }
+const averageRating = computed(() => {
+  if (reviews.value.length === 0) return 0
+  const total = reviews.value.reduce((sum, r) => sum + r.rating, 0)
+  return (total / reviews.value.length).toFixed(1)
+})
+
+const totalReviews = computed(() => reviews.value.length)
+
 const showAllReviews = ref(false)
 
 const displayedReviews = computed(() => {
@@ -158,6 +166,28 @@ function getCookie(name) {
           <button class="btn btn-dark btn-custom" @click="addToCart">🛒 Thêm vào giỏ hàng</button>
 
           <button class="btn btn-danger btn-custom">⚡ Mua ngay</button>
+        </div>
+
+        <br />
+        <div v-if="totalReviews > 0" class="mb-3">
+          <h6>
+            ⭐ Đánh giá trung bình:
+            <span class="text-warning fw-bold">{{ averageRating }}</span> / 5 ({{
+              totalReviews
+            }}
+            lượt đánh giá)
+          </h6>
+          <div>
+            <span v-for="i in 5" :key="i">
+              <i
+                :class="
+                  i <= Math.round(averageRating)
+                    ? 'bi bi-star-fill text-warning'
+                    : 'bi bi-star text-secondary'
+                "
+              ></i>
+            </span>
+          </div>
         </div>
       </div>
     </div>

@@ -16,6 +16,14 @@ const searchQuery = ref('')
 const selectedCategory = ref('')
 const sortOrder = ref('')
 const categories = ref([])
+const ratings = ref({})
+
+const fetchRatings = async () => {
+  for (const product of products.value) {
+    const res = await axios.get(`http://localhost:8080/api/reviews/product/${product.id}/summary`)
+    ratings.value[product.id] = res.data
+  }
+}
 
 const fetchProducts = async () => {
   const res = await axios.get('http://localhost:8080/api/products')
@@ -26,14 +34,14 @@ const fetchCategories = async () => {
   const res = await axios.get('http://localhost:8080/api/categories')
   categories.value = res.data
 }
-const token = localStorage.getItem('token');
+const token = localStorage.getItem('token')
 // Lấy danh sách yêu thích từ backend
 const fetchFavorites = async () => {
   if (!userId) return
-  const res = await axios.get(`http://localhost:8080/api/user/favorites/${userId}`,{
+  const res = await axios.get(`http://localhost:8080/api/user/favorites/${userId}`, {
     headers: {
-        Authorization: `Bearer ${token}`,
-      },
+      Authorization: `Bearer ${token}`,
+    },
   })
   favorites.value = res.data.map((fav) => fav.productId)
 }
@@ -43,18 +51,18 @@ const isFavorite = (productId) => favorites.value.includes(productId)
 const addToFavorites = async (productId) => {
   await axios.post('http://localhost:8080/api/user/favorites/favorites', null, {
     headers: {
-        Authorization: `Bearer ${token}`,
-      },
+      Authorization: `Bearer ${token}`,
+    },
     params: { userId, productId },
   })
   favorites.value.push(productId)
 }
 
 const removeFromFavorites = async (productId) => {
-  await axios.delete(`http://localhost:8080/api/user/favorites/${userId}/${productId}`,{
+  await axios.delete(`http://localhost:8080/api/user/favorites/${userId}/${productId}`, {
     headers: {
-        Authorization: `Bearer ${token}`,
-      },
+      Authorization: `Bearer ${token}`,
+    },
   })
   favorites.value = favorites.value.filter((id) => id !== productId)
 }
@@ -103,6 +111,7 @@ onMounted(async () => {
   await fetchProducts()
   await fetchCategories()
   await fetchFavorites()
+  await fetchRatings()
 })
 </script>
 
@@ -172,6 +181,11 @@ onMounted(async () => {
             >
               Chi tiết
             </router-link>
+            <!-- Hiển thị số sao và lượt đánh giá -->
+            <p v-if="ratings[product.id]">
+              ⭐ {{ ratings[product.id].averageRating.toFixed(1) }} /
+              {{ ratings[product.id].totalReviews }} đánh giá
+            </p>
           </div>
         </div>
       </template>
