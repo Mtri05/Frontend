@@ -30,7 +30,6 @@ export default {
         .get(`http://localhost:8080/api/user/addresses/${userId}`,{
           headers: {
             Authorization: `Bearer ${token}`,
-            
           },
         })
         .then((res) => {
@@ -61,7 +60,6 @@ export default {
       }
     },
   },
-
   mounted() {
     this.loadAddresses() // Gọi phương thức loadAddresses khi component được mount
   },
