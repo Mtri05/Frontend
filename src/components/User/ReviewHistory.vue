@@ -70,7 +70,13 @@ const renderStars = (rating) => {
 
 <template>
   <div class="container mt-3">
-    <h2 class="text-center">Lịch Sử Đánh Giá</h2>
+    <div class="d-flex align-items-center mb-4">
+      <a href="/" class="text-decoration-none d-flex align-items-center">
+        <i class="bi bi-house-fill text-dark me-2"></i>
+      </a>
+      <span class="mx-1 text-muted">|</span>
+      <span class="text-dark">Trang Lịch Sử Đánh Giá</span>
+    </div>
 
     <!-- Hiển thị thông báo lỗi nếu có -->
     <div v-if="errorMessage" class="alert alert-danger">
@@ -99,17 +105,17 @@ const renderStars = (rating) => {
     </div>
 
     <!-- Nếu không có lịch sử đánh giá -->
-    <div v-else>
-      <p>Chưa có đánh giá nào.</p>
+    <div v-else class="text-center">
+      <p >Chưa có đánh giá nào.</p>
     </div>
   </div>
 </template>
 
 <style scoped>
-.container {
+/* .container {
   max-width: 900px;
   margin: auto;
-}
+} */
 
 .card {
   background-color: #f8f9fa;

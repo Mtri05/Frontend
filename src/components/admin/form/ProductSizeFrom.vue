@@ -103,7 +103,7 @@ onMounted(() => {
           />
         </div>
         <button
-          class="btn btn-danger ms-2 mb-2"
+          class="btn btn-danger ms-2"
           @click="removeSize(sizeId)"
           title="Xoá size này"
         >

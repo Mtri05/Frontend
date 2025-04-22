@@ -6,6 +6,20 @@ const orders = ref([])
 
 const token = localStorage.getItem('token')
 
+const initDataTable = () => {
+  const table = $('#orderTable')
+  if ($.fn.dataTable.isDataTable('#orderTable')) {
+    table.DataTable().destroy()
+  }
+
+  table.DataTable({
+    responsive: true,
+    language: {
+      url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/vi.json',
+    },
+  })
+}
+
 onMounted(async () => {
   try {
     const response = await axios.get('http://localhost:8080/api/admin/order', {
@@ -14,6 +28,7 @@ onMounted(async () => {
       },
     })
     orders.value = response.data
+    initDataTable()
   } catch (err) {
     console.error(err)
     document.getElementById('error-message').style.display = 'block'

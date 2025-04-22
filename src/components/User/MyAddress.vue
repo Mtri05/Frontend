@@ -70,7 +70,13 @@ export default {
 
 <template>
   <div class="container mt-4">
-    <h2 class="text-center">📍 Danh Sách Địa Chỉ</h2>
+    <div class="d-flex align-items-center mb-4">
+      <a href="/" class="text-decoration-none d-flex align-items-center">
+        <i class="bi bi-house-fill text-dark me-2"></i>
+      </a>
+      <span class="mx-1 text-muted">|</span>
+      <span class="text-dark">Trang Địa Chỉ</span>
+    </div>
 
     <div class="mb-3">
       <router-link to="/user/address/form" class="btn btn-primary">

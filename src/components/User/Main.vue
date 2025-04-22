@@ -9,65 +9,65 @@ import "@/assets/main.js";
           <div
             class="item"
             style="
-              background-image: url(https://taothuonghieu.com/wp-content/uploads/2023/10/3-khac-biet-chien-luoc-thuong-hieu-Nike.webp.webp);
+              background-image: url(https://cdn.britannica.com/50/213250-050-02322AA8/Nike-logo.jpg);
             "
           >
             <div class="content">
-              <div class="name">Switzerland</div>
-              <div class="des">Lorem ipsum dolor, sit amet!</div>
-              <button class="view-more">see more</button>
+              <div class="name">Nike</div>
+              <div class="des">Thương hiệu thể thao toàn cầu, dẫn đầu về phong cách và công nghệ.</div>
+              <button class="view-more">Xem sản phẩm</button>
             </div>
           </div>
 
           <div
             class="item"
             style="
-              background-image: url(https://taothuonghieu.com/wp-content/uploads/2023/10/3-khac-biet-chien-luoc-thuong-hieu-Nike.webp.webp);
+              background-image: url(https://images.alphacoders.com/211/thumb-1920-211271.jpg);
             "
           >
             <div class="content">
-              <div class="name">Finland</div>
-              <div class="des">Lorem ipsum dolor, sit amet!</div>
-              <button class="view-more">see more</button>
+              <div class="name">Adidas</div>
+              <div class="des">Hãng thời trang thể thao đẳng cấp, nổi bật với thiết kế sáng tạo.</div>
+              <button class="view-more">Xem sản phẩm</button>
             </div>
           </div>
 
           <div
             class="item"
             style="
-              background-image: url(https://taothuonghieu.com/wp-content/uploads/2023/10/3-khac-biet-chien-luoc-thuong-hieu-Nike.webp.webp);
+              background-image: url(https://i.pinimg.com/736x/64/eb/ba/64ebbaee6bdef451998033ce96dda68d.jpg);
             "
           >
             <div class="content">
-              <div class="name">Iceland</div>
-              <div class="des">Lorem ipsum dolor, sit amet!</div>
-              <button class="view-more">see more</button>
+              <div class="name">Puma</div>
+              <div class="des">Phong cách thể thao mạnh mẽ, nổi bật với các dòng sản phẩm hiện đại.</div>
+              <button class="view-more">Xem sản phẩm</button>
             </div>
           </div>
 
           <div
             class="item"
             style="
-              background-image: url(https://taothuonghieu.com/wp-content/uploads/2023/10/3-khac-biet-chien-luoc-thuong-hieu-Nike.webp.webp);
+              background-image: url(https://w0.peakpx.com/wallpaper/163/418/HD-wallpaper-reebok-logo-blue-background-reebok-3d-logo-3d-art-reebok-brands-logo-blue-3d-reebok-logo.jpg);
             "
           >
             <div class="content">
-              <div class="name">Australia</div>
-              <div class="des">Lorem ipsum dolor, sit amet!</div>
-              <button class="view-more">see more</button>
+              <div class="name">Reebok</div>
+              <div class="des">Giày thể thao và thời trang sáng tạo, dành cho mọi tín đồ yêu thể thao.</div>
+              <button class="view-more">Xem sản phẩm</button>
             </div>
           </div>
 
           <div
             class="item"
             style="
-              background-image: url(https://taothuonghieu.com/wp-content/uploads/2023/10/3-khac-biet-chien-luoc-thuong-hieu-Nike.webp.webp);
+              background-image: url(https://w0.peakpx.com/wallpaper/174/722/HD-wallpaper-under-armour-carbon-logo-grunge-art-carbon-background-creative-under-armour-black-logo-fashion-brands-under-armour-logo-under-armour.jpg);
             "
           >
             <div class="content">
-              <div class="name">Netherland</div>
-              <div class="des">Lorem ipsum dolor, sit amet!</div>
-              <button class="view-more">see more</button>
+              <div class="name">Under Armour</div>
+              <div class="des">Nổi bật với sản phẩm thể thao chất lượng cao, bảo vệ và hỗ trợ cơ thể tối ưu.</div>
+              <button class="view-more">Xem sản phẩm</button>
             </div>
           </div>
           <!-- <div class="item"

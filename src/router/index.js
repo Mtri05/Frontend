@@ -28,6 +28,7 @@ import ManageAddressView from '@/views/ManageAddressView.vue'
 import ProductSizeFrom from '@/views/ProductSizeFormView.vue'
 import ReviewHistoryView from '@/views/ReviewHistoryView.vue'
 import EditAddressForm from '@/components/User/form/EditAddressForm.vue'
+import ContactView from '@/views/ContactView.vue'
 
 const routes = [
   {
@@ -174,6 +175,11 @@ const routes = [
     path: '/admin/product/productSizeForm',
     name: 'ProductSizeForm',
     component: ProductSizeFrom,
+  },
+  {
+    path: '/contact',
+    name: 'contact',
+    component: ContactView,
   },
   {
     path: '/about',
