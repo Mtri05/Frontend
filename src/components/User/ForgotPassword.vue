@@ -9,11 +9,23 @@ const errorMessage = ref('')
 const isSubmitting = ref(false)
 const router = useRouter()
 
+const validateEmail = (emailStr) => {
+  const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+  return regex.test(emailStr)
+}
+
 const handleForgotPassword = async (e) => {
   e.preventDefault()
 
   successMessage.value = ''
   errorMessage.value = ''
+
+  // Kiểm tra email hợp lệ
+  if (!validateEmail(email.value)) {
+    errorMessage.value = 'Vui lòng nhập email hợp lệ.'
+    return
+  }
+
   isSubmitting.value = true
 
   try {
@@ -24,7 +36,7 @@ const handleForgotPassword = async (e) => {
     if (response.data.status === 'success') {
       successMessage.value = response.data.message
 
-      // Chờ một chút để người dùng thấy thông báo
+      // Chờ người dùng đọc thông báo
       setTimeout(() => {
         router.push(`/verify-otp?email=${encodeURIComponent(email.value)}`)
       }, 1000)
@@ -65,12 +77,11 @@ const handleForgotPassword = async (e) => {
         <div class="mb-3">
           <label for="email" class="form-label">Email</label>
           <input
-            type="email"
+            type="text"
             class="form-control"
             id="email"
             v-model="email"
             placeholder="Nhập email của bạn"
-            required
           />
         </div>
 

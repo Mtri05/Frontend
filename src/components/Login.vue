@@ -15,12 +15,16 @@ const login = async () => {
     formData.append('email', email.value)
     formData.append('password', password.value)
 
+    if (!password.value.trim() || !email.value.trim()) {
+      error.value = 'Mật khẩu không được để trống hoặc chỉ chứa khoảng trắng.'
+      return
+    }
+
     const response = await axios.post('http://localhost:8080/api/login', formData, {
       headers: {},
       data: formData,
       withCredentials: true,
     })
-    console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', response)
     // Kiểm tra xem response.data.user có tồn tại không
     if (response.data && response.data.user) {
       const user = response.data.user
@@ -47,10 +51,10 @@ const login = async () => {
       throw new Error('Không tìm thấy thông tin người dùng')
     }
   } catch (err) {
-    // Log chi tiết lỗi để dễ dàng xem
-    console.log('Error during login:', err)
-    error.value = err.response?.data?.message || 'Email hoặc mật khẩu không đúng'
-
+    error.value =
+      typeof err.response?.data === 'string'
+        ? err.response.data
+        : err.response?.data?.message || 'Email hoặc mật khẩu không đúng'
   }
 }
 </script>

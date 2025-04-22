@@ -5,7 +5,7 @@ import axios from 'axios'
 const products = ref([])
 let dataTable = null
 
-const token = localStorage.getItem('token');
+const token = localStorage.getItem('token')
 
 const initDataTable = () => {
   const table = $('#productTable')
@@ -23,15 +23,14 @@ const initDataTable = () => {
 
 const loadProducts = async () => {
   try {
-    const response = await axios.get('http://localhost:8080/api/admin/product/products',{
+    const response = await axios.get('http://localhost:8080/api/admin/product/products', {
       headers: {
         Authorization: `Bearer ${token}`,
-    
       },
     })
     products.value = response.data
 
-    await nextTick() 
+    await nextTick()
     initDataTable()
   } catch (error) {
     console.error('Lỗi khi tải sản phẩm:', error)
@@ -90,7 +89,7 @@ onMounted(() => {
             <td>{{ new Intl.NumberFormat('vi-VN').format(item.price) }} VND</td>
             <td>
               <span :class="item.status ? 'badge bg-success' : 'badge bg-danger'">
-                {{ item.status ? 'Active' : 'Inactive' }}
+                {{ item.status ? 'Hoạt Động' : 'Ngừng Bán' }}
               </span>
             </td>
             <td>{{ item.categoryName }}</td>

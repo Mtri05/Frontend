@@ -14,7 +14,17 @@ const isSending = ref(false)
 
 axios.defaults.withCredentials = true
 
+const validateEmail = (emailStr) => {
+  const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+  return regex.test(emailStr)
+}
+
 const sendOtp = async () => {
+  if (!validateEmail(email.value)) {
+    error.value = 'Email không hợp lệ'
+    return
+  }
+
   if (isSending.value) return
   isSending.value = true
   error.value = ''
@@ -92,12 +102,11 @@ const confirmOtp = async () => {
         <div class="mb-3">
           <label for="email" class="form-label">Email</label>
           <input
-            type="email"
+            type="text"
             class="form-control"
             id="email"
             v-model="email"
             placeholder="Nhập email của bạn"
-            required
           />
         </div>
         <div class="d-grid">

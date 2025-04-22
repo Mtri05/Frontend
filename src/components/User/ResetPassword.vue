@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import axios from 'axios'
 import { useRouter, useRoute } from 'vue-router'
 
@@ -22,6 +22,11 @@ const handleResetPassword = async (e) => {
   errorMessage.value = ''
   successMessage.value = ''
 
+  if (!newPassword.value.trim() || !confirmPassword.value.trim()) {
+    errorMessage.value = 'Mật khẩu không được để trống hoặc chỉ chứa khoảng trắng.'
+    return
+  }
+
   if (newPassword.value !== confirmPassword.value) {
     errorMessage.value = 'Mật khẩu xác nhận không khớp.'
     return
@@ -33,8 +38,8 @@ const handleResetPassword = async (e) => {
     const response = await axios.post('http://localhost:8080/api/reset-password', null, {
       params: {
         email: email.value,
-        newPassword: newPassword.value
-      }
+        newPassword: newPassword.value,
+      },
     })
 
     if (response.data.status === 'success') {
@@ -52,12 +57,36 @@ const handleResetPassword = async (e) => {
     isSubmitting.value = false
   }
 }
+const passwordStrength = ref('') // giữ thông báo độ mạnh
+
+const checkPasswordStrength = (password) => {
+  if (password.length < 6) {
+    return 'Yếu'
+  }
+
+  const hasLetter = /[a-zA-Z]/.test(password)
+  const hasNumber = /\d/.test(password)
+  const hasSpecial = /[!@#$%^&*(),.?":{}|<>]/.test(password)
+
+  if (hasLetter && hasNumber && hasSpecial && password.length >= 8) {
+    return 'Mạnh'
+  } else if ((hasLetter && hasNumber) || (hasLetter && hasSpecial)) {
+    return 'Trung bình'
+  }
+
+  return 'Yếu'
+}
+
+// Theo dõi khi người dùng nhập mật khẩu
+watch(newPassword, (value) => {
+  passwordStrength.value = checkPasswordStrength(value)
+})
 </script>
 <template>
   <div class="resetpassword-container">
     <div class="card p-4 shadow" style="max-width: 400px; width: 100%">
-    <!-- Logo -->
-    <div class="d-flex justify-content-center align-items-center mb-3">
+      <!-- Logo -->
+      <div class="d-flex justify-content-center align-items-center mb-3">
         <img src="@/assets/images/Nike.png" alt="Nike" class="img-fluid" style="max-width: 50px" />
         <img
           src="@/assets/images/Jordan.png"
@@ -80,8 +109,17 @@ const handleResetPassword = async (e) => {
             id="newPassword"
             v-model="newPassword"
             placeholder="Nhập mật khẩu mới"
-            required
           />
+          <small
+            v-if="newPassword"
+            :class="{
+              'text-danger': passwordStrength === 'Yếu',
+              'text-warning': passwordStrength === 'Trung bình',
+              'text-success': passwordStrength === 'Mạnh',
+            }"
+          >
+            Độ mạnh mật khẩu: {{ passwordStrength }}
+          </small>
         </div>
 
         <div class="mb-3">
@@ -92,7 +130,6 @@ const handleResetPassword = async (e) => {
             id="confirmPassword"
             v-model="confirmPassword"
             placeholder="Nhập lại mật khẩu"
-            required
           />
         </div>
 
@@ -112,50 +149,50 @@ const handleResetPassword = async (e) => {
 
 <style scoped>
 .resetpassword-container {
-    background-color: #f8f9fa;
-    height: 100vh;
-    margin: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-family: Arial, sans-serif;
+  background-color: #f8f9fa;
+  height: 100vh;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: Arial, sans-serif;
 }
 
 .card {
-    border: 1px solid #e0e0e0;
-    border-radius: 12px;
-    box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
-    background-color: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
+  background-color: #ffffff;
 }
 
 h2 {
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: #343a40;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #343a40;
 }
 
 .btn-dark {
-    background-color: #343a40;
-    border: none;
-    border-radius: 8px;
-    font-weight: bold;
-    padding: 0.75rem;
-    font-size: 1rem;
-    transition: all 0.3s ease;
+  background-color: #343a40;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  padding: 0.75rem;
+  font-size: 1rem;
+  transition: all 0.3s ease;
 }
 
 .btn-dark:hover {
-    background-color: #495057;
-    box-shadow: 0 0 8px rgba(52, 58, 64, 0.5);
+  background-color: #495057;
+  box-shadow: 0 0 8px rgba(52, 58, 64, 0.5);
 }
 
 a.text-secondary {
-    color: #6c757d !important;
-    text-decoration: underline;
+  color: #6c757d !important;
+  text-decoration: underline;
 }
 
 a.text-secondary:hover {
-    color: #5a6268 !important;
-    text-decoration: none;
+  color: #5a6268 !important;
+  text-decoration: none;
 }
 </style>

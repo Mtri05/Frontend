@@ -2,8 +2,7 @@
 import { ref, onMounted, nextTick } from 'vue'
 import axios from 'axios'
 
-const token = localStorage.getItem('token');
-
+const token = localStorage.getItem('token')
 
 const form = ref({
   id: null,
@@ -21,10 +20,10 @@ const fetchCategories = async () => {
     $('#categoryTable').DataTable().destroy()
   }
 
-  const res = await axios.get('http://localhost:8080/api/admin/category/list',{
+  const res = await axios.get('http://localhost:8080/api/admin/category/list', {
     headers: {
-        Authorization: `Bearer ${token}`,
-      },
+      Authorization: `Bearer ${token}`,
+    },
   })
   categories.value = res.data
   await nextTick()
@@ -62,11 +61,15 @@ const handleSubmit = async () => {
 
 const handleUpdate = async (categoryData) => {
   try {
-    await axios.post(`http://localhost:8080/api/admin/category/update/${form.value.id}`, categoryData,{
-      headers: {
-        Authorization: `Bearer ${token}`,
+    await axios.post(
+      `http://localhost:8080/api/admin/category/update/${form.value.id}`,
+      categoryData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       },
-    })
+    )
     alert('Danh mục đã được cập nhật thành công')
     resetForm()
     isFormVisible.value = false
@@ -82,7 +85,7 @@ const handleUpdate = async (categoryData) => {
 
 const handleAdd = async (categoryData) => {
   try {
-    await axios.post('http://localhost:8080/api/admin/category/add', categoryData,{
+    await axios.post('http://localhost:8080/api/admin/category/add', categoryData, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -149,8 +152,8 @@ const initDataTable = () => {
           <div class="mb-3">
             <label for="status" class="form-label">Trạng thái</label>
             <select v-model="form.status" class="form-select" id="status">
-              <option :value="true">Active</option>
-              <option :value="false">Inactive</option>
+              <option :value="true">Hoạt Động</option>
+              <option :value="false">Ngừng Hoạt Động</option>
             </select>
           </div>
           <div class="text-end">
@@ -176,7 +179,11 @@ const initDataTable = () => {
           <tr v-for="category in categories" :key="category.id">
             <td>{{ category.id }}</td>
             <td>{{ category.name }}</td>
-            <td>{{ category.status ? 'Active' : 'Inactive' }}</td>
+            <td>
+              <span :class="category.status ? 'badge bg-success' : 'badge bg-danger'">
+                {{ category.status ? 'Hoạt Động' : 'Ngừng Bán' }}
+              </span>
+            </td>
             <td>
               <button class="btn btn-warning me-2" @click="openEditForm(category)">Sửa</button>
             </td>

@@ -182,9 +182,9 @@ function getCookie(name) {
         </div>
 
         <div class="d-flex justify-content-between">
-          <button class="btn btn-dark btn-custom" @click="addToCart">🛒 Thêm vào giỏ hàng</button>
+          <button class="btn btn-danger btn-custom" @click="addToCart">🛒 Thêm vào giỏ hàng</button>
 
-          <button class="btn btn-danger btn-custom">⚡ Mua ngay</button>
+          <!-- <button class="btn btn-danger btn-custom">⚡ Mua ngay</button> -->
         </div>
 
         <br />

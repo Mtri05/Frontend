@@ -16,7 +16,7 @@ const loadImagesByProduct = async () => {
     const res = await axios.get(`http://localhost:8080/api/admin/product/images?productId=${productId}`,{
       headers: {
     Authorization: `Bearer ${token}`,
-    
+
   },
     })
     imageList.value = res.data
@@ -28,18 +28,18 @@ const deleteImage = async (id) => {
   if (!confirm('Bạn có chắc muốn xóa ảnh này?')) return
   try {
     const formData = new FormData()
-    formData.append('id', id) 
+    formData.append('id', id)
 
-    
+
     const res = await axios.post(`http://localhost:8080/api/admin/product/image/delete`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
         Authorization: `Bearer ${token}`,
       },
-      
+
     })
 
-    
+
     imageList.value = imageList.value.filter((img) => img.id !== id)
   } catch (err) {
     console.error('Lỗi khi xóa ảnh:', err.response?.data || err.message)
@@ -61,7 +61,7 @@ onMounted(() => {
 
       <div class="d-flex justify-content-between mb-3">
         <a href="/admin/product" class="btn btn-secondary">Quay lại</a>
-        <button class="btn btn-primary" @click="handleAddImage">Thêm ảnh</button>
+        <!-- <button class="btn btn-primary" @click="handleAddImage">Thêm ảnh</button> -->
       </div>
 
 

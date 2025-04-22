@@ -1,14 +1,14 @@
 <script setup>
-import { ref, onMounted } from "vue";
-import { useRoute } from "vue-router";
-import { useRouter } from "vue-router";
-import axios from "axios"
+import { ref, onMounted } from 'vue'
+import { useRoute } from 'vue-router'
+import { useRouter } from 'vue-router'
+import axios from 'axios'
 
 const route = useRoute()
 const router = useRouter()
 const productId = Number(route.query.productId)
 
-const token = localStorage.getItem('token');
+const token = localStorage.getItem('token')
 
 const form = ref({
   name: '',
@@ -19,30 +19,40 @@ const form = ref({
   images: [],
 })
 
-
 const categories = ref([])
 const errors = ref({})
 
-
 const loadCategories = async () => {
-  const res = await axios.get('http://localhost:8080/api/admin/product/categories',{
+  const res = await axios.get('http://localhost:8080/api/admin/product/categories', {
     headers: {
-    Authorization: `Bearer ${token}`,
-
-  },
+      Authorization: `Bearer ${token}`,
+    },
   })
   categories.value = res.data
 }
 
+const allProducts = ref([])
+
+const loadProducts = async () => {
+  try {
+    const response = await axios.get('http://localhost:8080/api/admin/product/products', {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+    allProducts.value = response.data
+  } catch (error) {
+    console.error('Lỗi khi tải sản phẩm:', error)
+  }
+}
 
 const loadProduct = async () => {
   if (!productId) return
   try {
-    const res = await axios.get(`http://localhost:8080/api/admin/product/${productId}`,{
+    const res = await axios.get(`http://localhost:8080/api/admin/product/${productId}`, {
       headers: {
-    Authorization: `Bearer ${token}`,
-
-  },
+        Authorization: `Bearer ${token}`,
+      },
     })
     const product = res.data
     console.log(product)
@@ -61,9 +71,20 @@ const loadProduct = async () => {
 onMounted(async () => {
   await loadCategories()
   await loadProduct()
+  await loadProducts()
 })
 
 const handleSubmit = async () => {
+  // Kiểm tra trùng tên
+  const isDuplicateName = allProducts.value.some(
+    (p) =>
+      p.name.trim().toLowerCase() === form.value.name.trim().toLowerCase() &&
+      (!productId || p.id !== productId),
+  )
+  if (isDuplicateName) {
+    errors.value.name = 'Tên sản phẩm đã tồn tại'
+    return
+  }
   const formData = new FormData()
   formData.append('name', form.value.name)
   formData.append('description', form.value.description)
@@ -80,7 +101,7 @@ const handleSubmit = async () => {
     if (productId) {
       await axios.post(`http://localhost:8080/api/admin/product/update/${productId}`, formData, {
         headers: {
-          'Content-Type': 'multipart/form-data' ,
+          'Content-Type': 'multipart/form-data',
           Authorization: `Bearer ${token}`,
         },
       })
@@ -88,10 +109,7 @@ const handleSubmit = async () => {
       router.push('/admin/product')
     } else {
       await axios.post('http://localhost:8080/api/admin/product/add', formData, {
-        headers: { 'Content-Type': 'multipart/form-data',
-        Authorization: `Bearer ${token}`,
-         },
-
+        headers: { 'Content-Type': 'multipart/form-data', Authorization: `Bearer ${token}` },
       })
       alert('Thêm thành công')
       router.push('/admin/product')
@@ -133,7 +151,6 @@ const handleSubmit = async () => {
           <div class="text-danger">{{ errors.name }}</div>
         </div>
 
-
         <div class="mb-3">
           <label class="form-label fw-semibold">Mô tả</label>
           <textarea
@@ -144,7 +161,6 @@ const handleSubmit = async () => {
           ></textarea>
           <div class="text-danger">{{ errors.description }}</div>
         </div>
-
 
         <div class="mb-3">
           <label class="form-label fw-semibold">Giá</label>
@@ -157,7 +173,6 @@ const handleSubmit = async () => {
           <div class="text-danger">{{ errors.price }}</div>
         </div>
 
-
         <div class="mb-3">
           <label class="form-label fw-semibold">Danh mục</label>
           <select v-model="form.categoryId" class="form-select">
@@ -169,15 +184,13 @@ const handleSubmit = async () => {
           <div class="text-danger">{{ errors.categoryId }}</div>
         </div>
 
-
         <div class="mb-3">
           <label for="status" class="form-label fw-semibold">Trạng thái</label>
           <select v-model="form.status" class="form-select" id="status" name="status">
-            <option :value="true">Active</option>
-            <option :value="false">Inactive</option>
+            <option :value="true">Hoạt Động</option>
+            <option :value="false">Ngừng Bán</option>
           </select>
         </div>
-
 
         <div class="mb-3">
           <label class="form-label fw-semibold">Hình ảnh</label>
@@ -190,7 +203,6 @@ const handleSubmit = async () => {
           />
           <div class="text-danger">{{ errors.images }}</div>
         </div>
-
 
         <div class="mb-2">
           <button type="submit" class="btn btn-primary me-2">

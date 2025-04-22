@@ -247,7 +247,7 @@ t>
           </router-link>
         </div>
         <div class="text-end mt-3">
-          <button :disabled="isPlacingOrder" @click="placeOrder" class="btn btn-primary">
+          <button :disabled="isPlacingOrder" @click="placeOrder" class="btn btn-primary me-2">
             {{ isPlacingOrder ? 'Đang đặt...' : 'Xác nhận đặt hàng' }}
           </button>
           <button @click="showAddressList = false" class="btn btn-secondary">Huỷ</button>
