@@ -88,7 +88,7 @@ const logout = async () => {
             </li>
             <!-- Menu Dropdown -->
             <li class="nav-item dropdown position-static">
-              <a class="nav-link no-arrow" href="/product" id="navbarDropdown">Danh Mục</a>
+              <a class="nav-link no-arrow" href="/product" id="navbarDropdown">Sản Phẩm</a>
             </li>
 
             <!-- Mục Nam -->
