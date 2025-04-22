@@ -361,6 +361,12 @@ const logout = async () => {
                     <i class="fa-solid fa-box-archive me-2 text-danger"></i> Đơn hàng
                   </a>
                 </li>
+                <li>
+                  <a class="dropdown-item py-2" href="/user/Review/history">
+                    <i class="fa-solid fa-star me-2 text-warning"></i>
+                    Lịch sử đánh giá
+                  </a>
+                </li>
               </ul>
             </div>
 

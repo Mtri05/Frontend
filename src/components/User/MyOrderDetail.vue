@@ -54,14 +54,14 @@ onMounted(async () => {
     if (orderDetail.value.status === 3) {
       const checks = await Promise.all(
         orderDetail.value.items.map(async (item) => {
-          const hasReviewed = await checkReviewStatus(item.orderDetailId)
+          const hasReviewed = await checkReviewStatus(item.id)
           return {
             ...item,
-            hasReviewed,  // Đảm bảo cập nhật chính xác giá trị hasReviewed
+            hasReviewed, // Đảm bảo cập nhật chính xác giá trị hasReviewed
           }
         }),
       )
-      orderDetail.value.items = checks  // Cập nhật lại danh sách items
+      orderDetail.value.items = checks // Cập nhật lại danh sách items
     }
   } catch (error) {
     console.error('Lỗi khi tải chi tiết đơn hàng:', error)
@@ -69,7 +69,6 @@ onMounted(async () => {
     loading.value = false
   }
 })
-
 
 // Hàm gửi đánh giá
 const submitReview = async () => {
@@ -163,7 +162,7 @@ const formatDateVN = (dateString) => {
           <td>{{ detail.quantity }}</td>
           <td>{{ detail.size }}</td>
           <td>{{ formatPrice(detail.price * detail.quantity) }}</td>
-          <td>
+          <td v-if="orderDetail.status === 3">
             <button
               v-if="!detail.hasReviewed"
               class="btn btn-sm btn-outline-primary"

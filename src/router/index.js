@@ -26,6 +26,7 @@ import ManageImage from '@/views/ManageImageView.vue'
 import ManageProductSize from '@/views/manageProductSizeView.vue'
 import ManageAddressView from '@/views/ManageAddressView.vue'
 import ProductSizeFrom from '@/views/ProductSizeFormView.vue'
+import ReviewHistoryView from '@/views/ReviewHistoryView.vue'
 import EditAddressForm from '@/components/User/form/EditAddressForm.vue'
 
 const routes = [
@@ -88,6 +89,11 @@ const routes = [
     path: '/user/order/details',
     name: 'MyOrderDetailView',
     component: MyOrderDetailView,
+  },
+  {
+    path: '/user/review/history',
+    name: 'ReviewHistoryView',
+    component: ReviewHistoryView,
   },
   {
     path: '/user/favorite',
@@ -228,7 +234,7 @@ router.beforeEach((to, from, next) => {
     if (to.path.startsWith('/admin') || to.path.startsWith('/user')) {
       return next('/login')
     }
-    return next() 
+    return next()
   }
 
   // Mọi trường hợp không hợp lệ khác => redirect về login

@@ -1,11 +1,26 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import axios from 'axios'
-import Review from './Review.vue'
 
 const product = ref(null)
 const selectedSize = ref(null)
 const quantity = ref(1)
+
+const reviews = ref([])
+
+const fetchReviews = async () => {
+  try {
+    const res = await axios.get(`http://localhost:8080/api/reviews/product/${product.value.id}`)
+    reviews.value = res.data
+  } catch (err) {
+    console.log(err)
+  }
+}
+const showAllReviews = ref(false)
+
+const displayedReviews = computed(() => {
+  return showAllReviews.value ? reviews.value : reviews.value.slice(0, 3)
+})
 
 const getProductIdFromUrl = () => {
   const params = new URLSearchParams(window.location.search)
@@ -45,6 +60,7 @@ onMounted(async () => {
       if (product.value.sizes?.length) {
         selectedSize.value = product.value.sizes[0]
       }
+      await fetchReviews()
     } catch (err) {
       console.error('Error fetching product:', err)
     }
@@ -145,6 +161,38 @@ function getCookie(name) {
         </div>
       </div>
     </div>
-    <Review :productId="product.id" :userId="parseInt(getCookie('userId'))" />
+    <div class="mt-5">
+      <h4>Đánh giá sản phẩm</h4>
+      <div v-if="reviews.length === 0">
+        <p class="text-muted">Chưa có đánh giá nào cho sản phẩm này.</p>
+      </div>
+      <div v-else>
+        <div v-for="(review, index) in displayedReviews" :key="review.id" class="card mb-3">
+          <div class="card-body">
+            <h5 class="card-title">{{ review.userName }}</h5>
+            <p class="card-text">{{ review.comment }}</p>
+            <p class="card-text">
+              <small class="text-warning">
+                <span v-for="i in 5" :key="i">
+                  <i :class="i <= review.rating ? 'bi bi-star-fill' : 'bi bi-star'"></i>
+                </span>
+              </small>
+            </p>
+          </div>
+        </div>
+
+        <div v-if="reviews.length > 3 && !showAllReviews" class="text-center mt-3">
+          <button class="btn btn-outline-primary" @click="showAllReviews = true">
+            Xem thêm đánh giá
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
+<style scoped>
+.card {
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+}
+</style>
