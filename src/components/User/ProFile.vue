@@ -13,12 +13,12 @@ const email = ref('')
 const avatar = ref(null)
 const previewUrl = ref('')
 
-const token = localStorage.getItem('token');
+const token = localStorage.getItem('token')
 
 // Lấy thông tin người dùng khi trang được tải
 onMounted(async () => {
   try {
-    const response = await axios.get(`http://localhost:8080/api/user/profile/${id}`,{
+    const response = await axios.get(`http://localhost:8080/api/user/profile/${id}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -52,10 +52,15 @@ const handleFileChange = (event) => {
 
 // Cập nhật thông tin người dùng
 const updateProfile = async () => {
+  if (!name.value.trim()) {
+    alert('Vui lòng nhập họ và tên.')
+    return
+  }
   const formData = new FormData()
   formData.append('id', id)
   formData.append('fullName', name.value)
   formData.append('email', email.value)
+
   if (avatar.value) {
     formData.append('avatar', avatar.value)
   }
@@ -92,12 +97,7 @@ const updateProfile = async () => {
               id="avatarPreview"
             />
           </label>
-          <input
-            type="file"
-            id="avatar"
-            class="d-none"
-            @change="handleFileChange"
-          />
+          <input type="file" id="avatar" class="d-none" @change="handleFileChange" />
         </div>
 
         <form @submit.prevent="updateProfile">
@@ -131,7 +131,7 @@ img#avatarPreview {
   cursor: pointer;
 }
 
-input[type="file"] {
+input[type='file'] {
   display: none;
 }
 </style>
