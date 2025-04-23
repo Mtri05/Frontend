@@ -13,7 +13,7 @@ const form = ref({
 const errors = ref({})
 const categories = ref([])
 const modalTitle = ref('')
-const isFormVisible = ref(false) // Hiển thị form
+const isFormVisible = ref(false)
 
 const fetchCategories = async () => {
   if ($.fn.DataTable.isDataTable('#categoryTable')) {
@@ -37,6 +37,7 @@ const openAddForm = () => {
   modalTitle.value = 'Thêm Mới Danh Mục'
   errors.value = {}
   isFormVisible.value = true
+  showModal()
 }
 
 const openEditForm = (category) => {
@@ -44,6 +45,7 @@ const openEditForm = (category) => {
   modalTitle.value = 'Cập Nhật Danh Mục'
   errors.value = {}
   isFormVisible.value = true
+  showModal()
 }
 
 const handleSubmit = async () => {
@@ -72,7 +74,7 @@ const handleUpdate = async (categoryData) => {
     )
     alert('Danh mục đã được cập nhật thành công')
     resetForm()
-    isFormVisible.value = false
+    hideModal()
     await fetchCategories()
   } catch (err) {
     if (err.response?.data?.error) {
@@ -92,7 +94,7 @@ const handleAdd = async (categoryData) => {
     })
     alert('Danh mục đã được thêm thành công')
     resetForm()
-    isFormVisible.value = false
+    hideModal()
     await fetchCategories()
   } catch (err) {
     if (err.response?.data?.error) {
@@ -112,9 +114,15 @@ const resetForm = () => {
   errors.value = {}
 }
 
-const cancelForm = () => {
-  resetForm()
-  isFormVisible.value = false
+const showModal = () => {
+  const modal = new bootstrap.Modal(document.getElementById('categoryModal'))
+  modal.show()
+}
+
+const hideModal = () => {
+  const modalEl = document.getElementById('categoryModal')
+  const modalInstance = bootstrap.Modal.getInstance(modalEl)
+  modalInstance.hide()
 }
 
 const initDataTable = () => {
@@ -133,34 +141,41 @@ const initDataTable = () => {
     <hr />
     <button class="btn btn-primary mb-3" @click="openAddForm">Thêm Mới</button>
 
-    <!-- Form trực tiếp trên trang -->
-    <div v-if="isFormVisible" class="card mb-4">
-      <div class="card-body">
-        <h5 class="card-title">{{ modalTitle }}</h5>
-        <form @submit.prevent="handleSubmit">
-          <div class="mb-3">
-            <label for="name" class="form-label">Tên danh mục</label>
-            <input
-              v-model="form.name"
-              type="text"
-              class="form-control"
-              id="name"
-              placeholder="Nhập tên danh mục"
-            />
-            <div v-if="errors.name" class="text-danger">{{ errors.name }}</div>
-          </div>
-          <div class="mb-3">
-            <label for="status" class="form-label">Trạng thái</label>
-            <select v-model="form.status" class="form-select" id="status">
-              <option :value="true">Hoạt Động</option>
-              <option :value="false">Ngừng Hoạt Động</option>
-            </select>
-          </div>
-          <div class="text-end">
-            <button type="submit" class="btn btn-success me-2">Lưu</button>
-            <button type="button" class="btn btn-secondary" @click="cancelForm">Huỷ</button>
-          </div>
-        </form>
+    <!-- Modal -->
+    <div class="modal fade" id="categoryModal" tabindex="-1" aria-labelledby="modalTitle" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <form @submit.prevent="handleSubmit">
+            <div class="modal-header">
+              <h5 class="modal-title" id="modalTitle">{{ modalTitle }}</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+            </div>
+            <div class="modal-body">
+              <div class="mb-3">
+                <label for="name" class="form-label">Tên danh mục</label>
+                <input
+                  v-model="form.name"
+                  type="text"
+                  class="form-control"
+                  id="name"
+                  placeholder="Nhập tên danh mục"
+                />
+                <div v-if="errors.name" class="text-danger">{{ errors.name }}</div>
+              </div>
+              <div class="mb-3">
+                <label for="status" class="form-label">Trạng thái</label>
+                <select v-model="form.status" class="form-select" id="status">
+                  <option :value="true">Hoạt Động</option>
+                  <option :value="false">Ngừng Hoạt Động</option>
+                </select>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+              <button type="submit" class="btn btn-success">Lưu</button>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
 

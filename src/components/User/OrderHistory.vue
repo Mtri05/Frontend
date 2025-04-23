@@ -119,7 +119,7 @@ export default {
             {{ getStatusText(order.status).text }}
           </td>
           <td>
-            <a :href="`/user/order/details?orderId=${order.orderId}`" class="btn btn-primary btn-sm"
+            <a :href="`/user/order/details?orderId=${order.orderId}`" class="btn btn-primary btn-sm me-2"
               >Xem</a
             >
             <button

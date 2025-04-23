@@ -6,19 +6,19 @@ const orders = ref([])
 
 const token = localStorage.getItem('token')
 
-const initDataTable = () => {
-  const table = $('#orderTable')
-  if ($.fn.dataTable.isDataTable('#orderTable')) {
-    table.DataTable().destroy()
-  }
+// const initDataTable = () => {
+//   const table = $('#orderTable')
+//   if ($.fn.dataTable.isDataTable('#orderTable')) {
+//     table.DataTable().destroy()
+//   }
 
-  table.DataTable({
-    responsive: true,
-    language: {
-      url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/vi.json',
-    },
-  })
-}
+//   table.DataTable({
+//     responsive: true,
+//     language: {
+//       url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/vi.json',
+//     },
+//   })
+// }
 
 onMounted(async () => {
   try {
@@ -28,7 +28,7 @@ onMounted(async () => {
       },
     })
     orders.value = response.data
-    initDataTable()
+    // initDataTable()
   } catch (err) {
     console.error(err)
     document.getElementById('error-message').style.display = 'block'

@@ -9,39 +9,39 @@ import "@/assets/main.js";
           <div
             class="item"
             style="
-              background-image: url(https://cdn.britannica.com/50/213250-050-02322AA8/Nike-logo.jpg);
+              background-image: url(https://mcdn.wallpapersafari.com/medium/37/81/JIORP3.jpg);
             "
           >
             <div class="content">
               <div class="name">Nike</div>
               <div class="des">Thương hiệu thể thao toàn cầu, dẫn đầu về phong cách và công nghệ.</div>
-              <button class="view-more">Xem sản phẩm</button>
+              <a href="/product"><button class="view-more">Xem sản phẩm</button></a>
             </div>
           </div>
 
           <div
             class="item"
             style="
-              background-image: url(https://images.alphacoders.com/211/thumb-1920-211271.jpg);
+              background-image: url(https://mcdn.wallpapersafari.com/medium/10/28/372VtH.jpg);
             "
           >
             <div class="content">
               <div class="name">Adidas</div>
               <div class="des">Hãng thời trang thể thao đẳng cấp, nổi bật với thiết kế sáng tạo.</div>
-              <button class="view-more">Xem sản phẩm</button>
+              <a href="/product"><button class="view-more">Xem sản phẩm</button></a>
             </div>
           </div>
 
           <div
             class="item"
             style="
-              background-image: url(https://i.pinimg.com/736x/64/eb/ba/64ebbaee6bdef451998033ce96dda68d.jpg);
+              background-image: url(https://mcdn.wallpapersafari.com/medium/22/52/0kxYfX.png);
             "
           >
             <div class="content">
               <div class="name">Puma</div>
               <div class="des">Phong cách thể thao mạnh mẽ, nổi bật với các dòng sản phẩm hiện đại.</div>
-              <button class="view-more">Xem sản phẩm</button>
+              <a href="/product"><button class="view-more">Xem sản phẩm</button></a>
             </div>
           </div>
 
@@ -54,7 +54,7 @@ import "@/assets/main.js";
             <div class="content">
               <div class="name">Reebok</div>
               <div class="des">Giày thể thao và thời trang sáng tạo, dành cho mọi tín đồ yêu thể thao.</div>
-              <button class="view-more">Xem sản phẩm</button>
+              <a href="/product"><button class="view-more">Xem sản phẩm</button></a>
             </div>
           </div>
 
@@ -67,7 +67,7 @@ import "@/assets/main.js";
             <div class="content">
               <div class="name">Under Armour</div>
               <div class="des">Nổi bật với sản phẩm thể thao chất lượng cao, bảo vệ và hỗ trợ cơ thể tối ưu.</div>
-              <button class="view-more">Xem sản phẩm</button>
+              <a href="/product"><button class="view-more">Xem sản phẩm</button></a>
             </div>
           </div>
           <!-- <div class="item"
